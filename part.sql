@@ -152,15 +152,15 @@ CREATE PROCEDURE `partition_maintenance_all`(
 )
 BEGIN
     -- Retenção de dados personalizada para tabelas de histórico e tendências
-    CALL partition_maintenance(SCHEMA_NAME, 'history', 60, 24, 10);  -- Exemplo: 60 dias para trends_uint
-    CALL partition_maintenance(SCHEMA_NAME, 'history_log', 60, 24, 10);
-    CALL partition_maintenance(SCHEMA_NAME, 'history_str', 60, 24, 10);
-    CALL partition_maintenance(SCHEMA_NAME, 'history_text', 60, 24, 10);
-    CALL partition_maintenance(SCHEMA_NAME, 'history_uint', 60, 24, 10);
+    CALL partition_maintenance(SCHEMA_NAME, 'history', 60, 24, 60);      -- 60 partições diárias, mantendo dados por 60 dias
+    CALL partition_maintenance(SCHEMA_NAME, 'history_log', 60, 24, 60);
+    CALL partition_maintenance(SCHEMA_NAME, 'history_str', 60, 24, 60);
+    CALL partition_maintenance(SCHEMA_NAME, 'history_text', 60, 24, 60);
+    CALL partition_maintenance(SCHEMA_NAME, 'history_uint', 60, 24, 60);
 
-    -- Retenção estendida para tabelas de tendências
-    CALL partition_maintenance(SCHEMA_NAME, 'trends', 365, 24, 10);
-    CALL partition_maintenance(SCHEMA_NAME, 'trends_uint', 365, 24, 10);  -- Exemplo: 365 dias para trends_uint
+    -- Para tabelas de trends (dados agregados e menos volumosos)
+    CALL partition_maintenance(SCHEMA_NAME, 'trends', 365, 720, 12);     -- 12 partições mensais, mantendo dados por 365 dias
+    CALL partition_maintenance(SCHEMA_NAME, 'trends_uint', 365, 720, 12); -- 12 partições mensais, mantendo dados por 365 dias
 END$$
 
 DELIMITER ;

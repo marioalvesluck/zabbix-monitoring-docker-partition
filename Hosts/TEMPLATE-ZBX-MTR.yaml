@@ -1,0 +1,2079 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+    - uuid: 318183fccdde4200a0c7d5020ddbd899
+      name: Templates/padrao
+  templates:
+    - uuid: 51e629ae2d4840ae910d26fc3853e28b
+      template: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+      name: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+      groups:
+        - name: Templates/padrao
+      items:
+        - uuid: c0fdb103c61c453899b8db11d9e0e1ac
+          name: '08- Discovery High Availability'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#HA_ID},1.3.6.1.4.1.12356.101.13.2.1.1.1,{#HA_SN},1.3.6.1.4.1.12356.101.13.2.1.1.2,{#HA_EVENTAV},1.3.6.1.4.1.12356.101.13.2.1.1.10,{#HA_BYTSPROCE},1.3.6.1.4.1.12356.101.13.2.1.1.8,{#HA_CON},1.3.6.1.4.1.12356.101.13.2.1.1.6,{#HA_SYNCSTATUS},1.3.6.1.4.1.12356.101.13.2.1.1.12,{#HASYNCFAIL},1.3.6.1.4.1.12356.101.13.2.1.1.14,{#HASYNCTIME},1.3.6.1.4.1.12356.101.13.2.1.1.13,{#HANAME},1.3.6.1.4.1.12356.101.13.2.1.1.11,{#HAMASTER},1.3.6.1.4.1.12356.101.13.2.1.1.16,{#BAND},1.3.6.1.4.1.12356.101.13.2.1.1.5]'
+          key: fgHaStatsTable.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_ID}'
+                - HAID
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_SN}'
+                - HASN
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_EVENTAV}'
+                - HAEVENTAV
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_BYTSPROCE}'
+                - HABYTSPROCE
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_CON}'
+                - HACON
+            - type: STR_REPLACE
+              parameters:
+                - '{#HA_SYNCSTATUS}'
+                - HASYNCSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#HASYNCFAIL}'
+                - HASYNCFAIL
+            - type: STR_REPLACE
+              parameters:
+                - '{#HASYNCTIME}'
+                - HASYNCTIME
+            - type: STR_REPLACE
+              parameters:
+                - '{#HANAME}'
+                - HANAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#HAMASTER}'
+                - HAMASTER
+            - type: STR_REPLACE
+              parameters:
+                - '{#BAND}'
+                - BAND
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: c7272e76915e42be82c11b9058866821
+          name: 'Sensor count'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.12356.101.4.3.1.0
+          key: fgHwSensorCount
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          tags:
+            - tag: application
+              value: Inventory
+        - uuid: 52e3094da38349978614f605c3ef8e44
+          name: '02- Discovery Hardware Sensor'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SENSOR_ID},1.3.6.1.4.1.12356.101.4.3.2.1.1,{#SENSOR_NAME},1.3.6.1.4.1.12356.101.4.3.2.1.2,{#SENSOR_STATUS},.1.3.6.1.4.1.12356.101.4.3.2.1.4,{#SENSOR_VALUE},.1.3.6.1.4.1.12356.101.4.3.2.1.3]'
+          key: fgHwSensorEntIndex.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SENSOR_ID}'
+                - SENSORID
+            - type: STR_REPLACE
+              parameters:
+                - '{#SENSOR_COUNT}'
+                - SENSORCOUNT
+            - type: STR_REPLACE
+              parameters:
+                - '{#SENSOR_NAME}'
+                - SENSORNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#SENSOR_STATUS}'
+                - SENSORSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#SENSOR_VALUE}'
+                - SENSORVALUE
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: fe1fcaa4f9bb4831b7867ca54e515e5d
+          name: 'Temperature CPU0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.3.2.1.3.1
+          key: fgHwSensorEntValue
+          history: 90d
+          value_type: FLOAT
+          units: °C
+          preprocessing:
+            - type: CHECK_NOT_SUPPORTED
+              parameters:
+                - '-1'
+          tags:
+            - tag: sensor
+              value: temperature
+            - tag: temperature
+              value: CPU0
+        - uuid: 21c6580c9a9e4a879227fbb372f349b2
+          name: 'Number of CPUs'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.4.1.0
+          key: fgProcessorCount
+          delay: 1h
+          history: 7d
+          tags:
+            - tag: application
+              value: cpu
+        - uuid: 6823ca4aee164cd490fc941c20fb5242
+          name: 'CPU utilization'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.1.3.0
+          key: fgSysCpuUsage
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: application
+              value: cpu
+          triggers:
+            - uuid: 34053460ba6449a7a001bd0305614852
+              expression: 'min(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgSysCpuUsage,5m)>{$CPU.UTIL.CRIT.MAX}'
+              name: 'High CPU usage in {HOST.NAME} (over {$CPU.UTIL.CRIT}% for 5m) Current utilization: {ITEM.LASTVALUE1}'
+              priority: HIGH
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.NAME} is unavailable by ICMP'
+                  expression: 'max(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmpping,#3)=0'
+        - uuid: 24fe7109074d428d806523c141bcc665
+          name: 'Disk Capacity'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.1.7.0
+          key: fgSysDiskCapacity
+          history: 7d
+          units: B
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '1000000'
+          tags:
+            - tag: application
+              value: storage
+        - uuid: 44c5aa8e578f411a97762ec85692095f
+          name: 'Disk Usage'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.12356.101.4.1.6.0
+          key: fgSysDiskUsage
+          history: 7d
+          units: B
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '1000000'
+          tags:
+            - tag: application
+              value: storage
+        - uuid: 40d9cf5c983449de9ecdbc54ab998a58
+          name: 'Space utilization'
+          type: CALCULATED
+          key: fgSysDiskUsedPercentage
+          delay: 10m
+          history: 7d
+          units: '%'
+          params: '100*last(//fgSysDiskUsage)/last(//fgSysDiskCapacity)'
+          preprocessing:
+            - type: CHECK_NOT_SUPPORTED
+              parameters:
+                - '-1'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+          tags:
+            - tag: application
+              value: storage
+        - uuid: 2f28af7f2fff495ea12ab47faed7afba
+          name: 'Total memory'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.1.5.0
+          key: fgSysMemCapacity
+          delay: 1h
+          history: 7d
+          value_type: FLOAT
+          units: B
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '1024'
+          tags:
+            - tag: application
+              value: memory
+        - uuid: abde5686182e46ee9d3ca54ee0ff705f
+          name: 'Memory utilization'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.1.4.0
+          key: fgSysMemUsage
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: application
+              value: memory
+        - uuid: 298c288e210d486daf2dd50ae329782b
+          name: 'Firmware Version'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.4.1.1.0
+          key: fgSysVersion
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          inventory_link: OS_FULL
+          tags:
+            - tag: application
+              value: Inventory
+        - uuid: fc8ee36f5a3c443482338d0f61f478cd
+          name: '10- Discovery Virtual Domain'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#VDOM_ID},1.3.6.1.4.1.12356.101.3.2.1.1.1,{#VDOM_NAME},1.3.6.1.4.1.12356.101.3.2.1.1.2]'
+          key: fgVdEntIndex.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#VDOM_ID}'
+                - VDOMID
+            - type: STR_REPLACE
+              parameters:
+                - '{#VDOM_NAME}'
+                - VDOMNAME
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: a1791d4fe62742ae80080fd8df7f459d
+          name: '04- Discovery VPN IPSec'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FG_VPNIPSECNAME},.1.3.6.1.4.1.12356.101.12.4.1.1.16,{#FG_VPNIPSECSTATUS},.1.3.6.1.4.1.12356.101.12.4.1.1.17,{#FG_IFINOCTETS},.1.3.6.1.4.1.12356.101.12.2.1.1.9,{#FG_IFOUTOCTETS},.1.3.6.1.4.1.12356.101.12.2.1.1.10,{#FG_VPNIPSECGATEWAY},.1.3.6.1.4.1.12356.101.12.2.1.1.2,{#FG_VPNIPSECLIFE},.1.3.6.1.4.1.12356.101.12.2.1.1.3,{#FG_IPSECSRC},.1.3.6.1.4.1.12356.101.12.2.1.1.5,{#FG_IPSECDEST},.1.3.6.1.4.1.12356.101.12.2.1.1.7]'
+          key: fgVpnDialupTable.discovery
+          history: '0'
+          trends: '0'
+          status: DISABLED
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPVALUE}'
+                - SNMPVALUE
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_VPNIPSECNAME}'
+                - FGVPNIPSECNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_VPNIPSECSTATUS}'
+                - FGVPNIPSECSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_IFINOCTETS}'
+                - FGIFINOCTETS
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_IFOUTOCTETS}'
+                - FGIFOUTOCTETS
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_VPNIPSECGATEWAY}'
+                - FGVPNIPSECGATEWAY
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_VPNIPSECLIFE}'
+                - FGVPNIPSECLIFE
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_IPSECDEST}'
+                - FGIPSECDEST
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_IPSECSRC}'
+                - FGIPSECSRC
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: fb5224cb65b14c43a8c71bd676a48153
+          name: 'Active SSL VPN users'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.12.2.3.1.2.1
+          key: fgVpnSslStatsLoginUsers
+          history: 7d
+          tags:
+            - tag: application
+              value: 'SSL VPN'
+        - uuid: 06007b97287449a1af846d108cb04cf3
+          name: '05- Discovery VPN SSL Users'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FG_USERNAME},.1.3.6.1.4.1.12356.101.5.2.2.1.1.2,{#FG_USER_AUTH},.1.3.6.1.4.1.12356.101.5.2.2.1.1.3,{#FG_USER_STATUS},.1.3.6.1.4.1.12356.101.5.2.2.1.1.4,{#FG_USER_VDOM},.1.3.6.1.4.1.12356.101.5.2.2.1.1.5]'
+          key: fgVpnTunEntIndex.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USERNAME}'
+                - FGUSERNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USER_AUTH}'
+                - FGUSERAUTH
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USER_STATUS}'
+                - FGUSERSTATUS
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: 7f6c137fd13a498992010b716aa9b738
+          name: '11- Discovery VPN Phase 1'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.12356.101.12.2.2.1.2]'
+          key: fgVpnTunEntPhase1Name.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPVALUE}'
+                - SNMPVALUE
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: cd48b989efd142f9b6e0fce5130df134
+          name: '12- Discovery VPN Phase 2'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.12356.101.12.2.2.1.3]'
+          key: fgVpnTunEntPhase2Name
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPVALUE}'
+                - SNMPVALUE
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: fb0442f3a9bc416895c3351a7defd94c
+          name: 'Active IPsec VPN tunnels'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.101.12.1.1.0
+          key: fgVpnTunnelUpCount
+          history: 7d
+          preprocessing:
+            - type: CHECK_NOT_SUPPORTED
+              parameters:
+                - '-1'
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+          tags:
+            - tag: application
+              value: 'IPSec VPN'
+        - uuid: 69c3c202fdf3465993bcd55401dd4fee
+          name: '09- Discovery SD-WAN Health Check'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#HC_ID},1.3.6.1.4.1.12356.101.4.9.2.1.1,{#HC_NAME},1.3.6.1.4.1.12356.101.4.9.2.1.2,{#MEMBER_SEQ},1.3.6.1.4.1.12356.101.4.9.2.1.3,{#VDOM},1.3.6.1.4.1.12356.101.4.9.2.1.10]'
+          key: fgVWLHealthCheckLink.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#VDOM}'
+                - VDOM
+            - type: STR_REPLACE
+              parameters:
+                - '{#HC_ID}'
+                - HCID
+            - type: STR_REPLACE
+              parameters:
+                - '{#HC_NAME}'
+                - HCNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#MEMBER_SEQ}'
+                - MEMBERSEQ
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: 08d2f23426e84cee88e7d598b8c823a4
+          name: '06- Discovery Wireless'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SN},.1.3.6.1.4.1.12356.101.14.4.3.1.1,{#ADMSTATUS},1.3.6.1.4.1.12356.101.14.4.3.1.2,{#CLIENTCOUNT},1.3.6.1.4.1.12356.101.14.4.4.1.17,{#NAME},1.3.6.1.4.1.12356.101.14.4.3.1.3,{#STATUS},1.3.6.1.4.1.12356.101.14.4.4.1.7,{#MEM},1.3.6.1.4.1.12356.101.14.4.4.1.21,{#CPU},1.3.6.1.4.1.12356.101.14.4.4.1.20,{#UPTIME},1.3.6.1.4.1.12356.101.14.4.4.1.10,{#RX},1.3.6.1.4.1.12356.101.14.4.4.1.18,{#TX},1.3.6.1.4.1.12356.101.14.4.4.1.19,{#MODEL},1.3.6.1.4.1.12356.101.14.4.4.1.12]'
+          key: fgWcWtpConfigWtpId.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#SN}'
+                - FORTIAPSN
+            - type: STR_REPLACE
+              parameters:
+                - '{#ADMSTATUS}'
+                - FORTIAPADMSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#NAME}'
+                - FORTIAPNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#STATUS}'
+                - FORTIAPSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#CLIENTCOUNT}'
+                - FORTIAPCNTCLIENTCOUNT
+            - type: STR_REPLACE
+              parameters:
+                - '{#MEM}'
+                - FORTIAPMEM
+            - type: STR_REPLACE
+              parameters:
+                - '{#CPU}'
+                - FORTIAPCPU
+            - type: STR_REPLACE
+              parameters:
+                - '{#UPTIME}'
+                - FORTIAPUPTIME
+            - type: STR_REPLACE
+              parameters:
+                - '{#RX}'
+                - FORTIAPRX
+            - type: STR_REPLACE
+              parameters:
+                - '{#TX}'
+                - FORTIAPTX
+            - type: STR_REPLACE
+              parameters:
+                - '{#MODEL}'
+                - FORTIAPMODEL
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: 66533ba340644dd6be98386069ed0cdb
+          name: '07- Discovery  Contas de Acesso'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FG_USERID},.1.3.6.1.4.1.12356.100.1.2.100.2.1.1,{#FG_USER},.1.3.6.1.4.1.12356.100.1.2.100.2.1.2,{#FG_USER_TYPE},.1.3.6.1.4.1.12356.100.1.2.100.2.1.3,{#FG_USERMASK},.1.3.6.1.4.1.12356.100.1.2.100.2.1.5,{#FG_USERIP},.1.3.6.1.4.1.12356.100.1.2.100.2.1.4]'
+          key: fnAdminIndexFg.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USERID}'
+                - FGUSERID
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USER}'
+                - FGUSER
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USER_TYPE}'
+                - FGUSERTYPE
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USERIP}'
+                - FGUSERIP
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_USERMASK}'
+                - FGUSERMASK
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: c51ca502dd184c878d301e6a78a1f2d8
+          name: '01- Discovery IP firewall'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FG_IP},.1.3.6.1.2.1.4.20.1.1]'
+          key: fnipAdEntAddr.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#FG_IP}'
+                - FGIP
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: dd48e7abf972412b9900d7f0c7337866
+          name: 'Device Serial Number'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.12356.100.1.1.1.0
+          key: fnSysSerial
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: application
+              value: Inventory
+        - uuid: a13ad272f5cf4812a38d51bc21e4327c
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 7d
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+          triggers:
+            - uuid: 86568289ab8e48e394dabb8b22559758
+              expression: 'max(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmpping,#3)=0'
+              name: '{HOST.NAME} is unavailable by ICMP'
+              priority: HIGH
+              manual_close: 'YES'
+        - uuid: e223c76b1161413fbb7742fcbc2a5b6b
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+          triggers:
+            - uuid: 702dc8853563467da1eb8f6b214872f3
+              expression: 'min(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmppingloss,5m)>20'
+              name: 'Ping loss is too high on {HOST.NAME}'
+              priority: WARNING
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.NAME} is unavailable by ICMP'
+                  expression: 'max(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmpping,#3)=0'
+        - uuid: df926f7a75ee4e038115fa76eb7055e7
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          history: 7d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+          triggers:
+            - uuid: b53584f1ba2e4c29a041f103cd8437b5
+              expression: 'avg(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmppingsec,5m)>50'
+              name: 'Response time is too high on {HOST.NAME}'
+              priority: WARNING
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.NAME} is unavailable by ICMP'
+                  expression: 'max(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmpping,#3)=0'
+        - uuid: 705c2225d9d345568946d69c90833ffd
+          name: '03- Discovery Network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3,{#IFHCINOCTETS},1.3.6.1.2.1.31.1.1.1.6,{#IFHCOUTOCTETS},1.3.6.1.2.1.31.1.1.1.10,{#IFSPEED},1.3.6.1.2.1.31.1.1.1.15]'
+          key: net.if.discovery
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - '{#SNMPINDEX}'
+                - SNMPINDEX
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFOPERSTATUS}'
+                - IFOPERSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFADMINSTATUS}'
+                - IFADMINSTATUS
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFALIAS}'
+                - IFALIAS
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFNAME}'
+                - IFNAME
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFDESCR}'
+                - IFDESCR
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFTYPE}'
+                - IFTYPE
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFHCINOCTETS}'
+                - IFHCINOCTETS
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFHCOUTOCTETS}'
+                - IFHCOUTOCTETS
+            - type: STR_REPLACE
+              parameters:
+                - '{#IFSPEED}'
+                - IFSPEED
+          tags:
+            - tag: discovery
+              value: raw
+        - uuid: cb66e0700d4745339c92d4eb7ca796bd
+          name: 'System uptime'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: 'system.net.uptime[sysUpTime.0]'
+          history: 7d
+          units: uptime
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: component
+              value: system
+        - uuid: 5f45a9dc2fe6463bb262707cc848f774
+          name: 'SNMP agent availability'
+          type: INTERNAL
+          key: 'zabbix[host,snmp,available]'
+          history: 7d
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+          triggers:
+            - uuid: 52dde99be79f4aa986e861c0e5dbdfb8
+              expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0'
+              name: 'No SNMP data collection in host {HOST.NAME}'
+              priority: HIGH
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.NAME} is unavailable by ICMP'
+                  expression: 'max(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: f260b63a35c74078a500960a05fbf4bc
+          name: '02.1- Discovery Hardware Sensor Fan'
+          type: DEPENDENT
+          key: 01.Discovery.hardware.sensor.fan
+          delay: '0'
+          filter:
+            conditions:
+              - macro: '{#FG_SENSORNAME}'
+                value: '{$FG_SENSORNAME_FAN_MATCH}'
+                formulaid: A
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 46f62a8a657c4047a80983c404478dc6
+              name: 'Value {#FG_SENSORNAME}'
+              type: DEPENDENT
+              key: 'fgHwSensorEntValueFan.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].SENSORVALUE.first()'
+              master_item:
+                key: fgHwSensorEntIndex.discovery
+              tags:
+                - tag: component
+                  value: '{#FG_SENSORNAME}'
+          master_item:
+            key: fgHwSensorEntIndex.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_SENSORNAME}": net.SENSORNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: 71b21ee13c1b40f3aac52e63d1ccc345
+          name: '02.2- Discovery Hardware Sensor Temperature'
+          type: DEPENDENT
+          key: 01.Discovery.hardware.sensor.temperature
+          delay: '0'
+          filter:
+            conditions:
+              - macro: '{#FG_SENSORNAME}'
+                value: '{$FG_SENSORNAME_TEM_MATCH}'
+                formulaid: A
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: f6b70dac86b244fbb02eaea758503235
+              name: 'Temperature {#FG_SENSORNAME}'
+              type: DEPENDENT
+              key: 'fgHwSensorEntValueTemp.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              value_type: FLOAT
+              units: °C
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].SENSORVALUE.first()'
+              master_item:
+                key: fgHwSensorEntIndex.discovery
+              tags:
+                - tag: sensor
+                  value: temperature
+                - tag: temperature
+                  value: '{#FG_SENSORNAME}'
+          master_item:
+            key: fgHwSensorEntIndex.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_SENSORNAME}": net.SENSORNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: 471d8417580045a493048fcfbbb48102
+          name: '02.3- Discovery Hardware Sensors Status'
+          type: DEPENDENT
+          key: 01.Discovery.hardware.sensors.status
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 8fbbfa4ae6ce49c9a42ec52d1d384fd5
+              name: 'Status {#FG_SENSORNAME}'
+              type: DEPENDENT
+              key: 'fgHwSensorsEntAlarm.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].SENSORSTATUS.first()'
+              master_item:
+                key: fgHwSensorEntIndex.discovery
+              tags:
+                - tag: component
+                  value: sensors
+                - tag: sensors
+                  value: status
+          master_item:
+            key: fgHwSensorEntIndex.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_SENSORNAME}": net.SENSORNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: c1e67d79dece409bad1c915b9a1c78fb
+          name: '03- Discovery Network interfaces'
+          type: DEPENDENT
+          key: 03.Discovery.Network.interfaces
+          delay: '0'
+          filter:
+            conditions:
+              - macro: '{#IF_IFADMINSTATUS}'
+                value: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: A
+              - macro: '{#IF_IFNAME}'
+                value: '{$NET.IF.IFNAME.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: B
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: f0e811e8a0b64f05ad21130316abc924
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Administrative status'
+              type: DEPENDENT
+              key: 'ifAdmStatus.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFADMINSTATUS.first()'
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+            - uuid: e7d97152ae8648f8b11c4f9b8251f197
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Operation status'
+              type: DEPENDENT
+              key: 'ifOperStatus.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFOPERSTATUS.first()'
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+              trigger_prototypes:
+                - uuid: d9021495b10f46599f0ec65fc0cc1e2d
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/ifOperStatus.[{#IF_SNMPINDEX}],#2)=2'
+                  name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): in {HOST.NAME} Link down'
+                  status: DISABLED
+                  priority: AVERAGE
+            - uuid: 621206f970b7481c84ac5b3a4804178e
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Bits received'
+              type: DEPENDENT
+              key: 'net.if.in.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFHCINOCTETS.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+            - uuid: 01b9704c032f45cc81a20f2d371801ea
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Bits sent'
+              type: DEPENDENT
+              key: 'net.if.out.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFHCOUTOCTETS.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+            - uuid: f25fcdcce7d54f70bec6a8f518e5c3d2
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Speed'
+              type: DEPENDENT
+              key: 'net.if.speed.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFSPEED.first()'
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+                - type: MULTIPLIER
+                  parameters:
+                    - '1000000'
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+            - uuid: 45c6dd482a874e0f91f00df9e0e79b47
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Interface type'
+              type: DEPENDENT
+              key: 'net.if.type.[{#IF_SNMPINDEX}]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#IF_SNMPINDEX}")].IFTYPE.first()'
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              master_item:
+                key: net.if.discovery
+              tags:
+                - tag: component
+                  value: interface
+                - tag: description
+                  value: '{#IF_IFALIAS}'
+                - tag: interface
+                  value: '{#IF_IFNAME}'
+          graph_prototypes:
+            - uuid: e93ad7014395485082876bbc491414aa
+              name: 'Interface {#IF_IFALIAS} ({#IF_IFNAME}): Network traffic'
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  calc_fnc: ALL
+                  item:
+                    host: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+                    key: 'net.if.in.[{#IF_SNMPINDEX}]'
+                - sortorder: '1'
+                  drawtype: GRADIENT_LINE
+                  color: '274482'
+                  calc_fnc: ALL
+                  item:
+                    host: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+                    key: 'net.if.out.[{#IF_SNMPINDEX}]'
+          master_item:
+            key: net.if.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#IF_SNMPINDEX}": net.SNMPINDEX,
+                          "{#IF_IFADMINSTATUS}": net.IFADMINSTATUS,
+                          "{#IF_IFOPERSTATUS}": net.IFOPERSTATUS,
+                          "{#IF_IFALIAS}": net.IFALIAS,
+                          "{#IF_IFNAME}": net.IFNAME,
+                          "{#IF_IFDESCR}": net.IFDESCR,
+                          "{#IF_IFTYPE}": net.IFTYPE
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: 0e3dfbe2f4714c7ba5ed0d0e874d20e7
+          name: '07- Discovery Contas de Acesso'
+          type: DEPENDENT
+          key: Discovery.Contas.de.Acesso
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: d1a4222dbef346d693420e20676f91dc
+              name: 'User {#FG_USER}:  IP'
+              type: DEPENDENT
+              key: 'FgUserIP.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGUSERIP.first()'
+                - type: HEX_TO_DECIMAL
+                  parameters:
+                    - ''
+              master_item:
+                key: fnAdminIndexFg.discovery
+              tags:
+                - tag: users
+                  value: 'access firewall'
+            - uuid: 4b494d2f686a48a299961e6eb92d5441
+              name: 'User {#FG_USER}: Mask'
+              type: DEPENDENT
+              key: 'FgUserMask.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGUSERMASK.first()'
+              master_item:
+                key: fnAdminIndexFg.discovery
+              tags:
+                - tag: users
+                  value: 'access firewall'
+            - uuid: 5b40db309ed746a8845f38afcb440d40
+              name: 'User {#FG_USER}: Type'
+              type: DEPENDENT
+              key: 'FgUsertype.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGUSERTYPE.first()'
+              master_item:
+                key: fnAdminIndexFg.discovery
+              tags:
+                - tag: users
+                  value: 'access firewall'
+          master_item:
+            key: fnAdminIndexFg.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_USER}": net.FGUSER
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: d53a2c9ebb3e439687f0668ae897e384
+          name: '08- Discovery High Availability'
+          type: DEPENDENT
+          key: Discovery.High.Availability
+          delay: '0'
+          filter:
+            conditions:
+              - macro: '{#FG_SNMPINDEX}'
+                value: ^2$
+                formulaid: A
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 9afb689bb24e48268d65dd85c16d5769
+              name: 'HA Cluster Member {#HA_NAME}:  AV Events Rate'
+              type: DEPENDENT
+              key: 'fgHaStatsAvCount.rate.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HAEVENTAV.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: 364e65a7d8f3441eb50678cc153ab59b
+              name: 'HA Cluster Member {#HA_NAME}:  Bytes Processed Rate'
+              type: DEPENDENT
+              key: 'fgHaStatsByteCount.rate.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HABYTSPROCE.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: f7799372fb214faab575224057c8ece5
+              name: 'HA Cluster Member {#HA_NAME}:  Master SN'
+              type: DEPENDENT
+              key: 'fgHaStatsMasterSerial.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HAMASTER.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: 672e87c49f804c00b4a4da6e72a6e425
+              name: 'HA Cluster Member {#HA_NAME}:  Network Bandwidth Usage'
+              type: DEPENDENT
+              key: 'fgHaStatsNetUsage.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].BAND.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '1024'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: e085dcd5245042ca8a8596a9a7343362
+              name: 'HA Cluster Member {#HA_NAME}:  Concurrent Connections'
+              type: DEPENDENT
+              key: 'fgHaStatsSesCount.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HACON.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: 8f32b8030fa1471e9c709c0987491909
+              name: 'HA Cluster Member {#HA_NAME}:  Sync Success Time'
+              type: DEPENDENT
+              key: 'fgHaStatsSyncDatimeSucc.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HASYNCTIME.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: bdb0a430a03a46a888a94a8b652ae746
+              name: 'HA Cluster Member {#HA_NAME}:  Sync Failed Time'
+              type: DEPENDENT
+              key: 'fgHaStatsSyncDatimeUnsucc.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HASYNCFAIL.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+            - uuid: 425e09beb2d94952bc6bf0d6501b5ac0
+              name: 'HA Cluster Member {#HA_NAME}:  Sync Status'
+              type: DEPENDENT
+              key: 'fgHaStatsSyncStatus.["{#HA_NAME}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].HASYNCSTATUS.first()'
+              master_item:
+                key: fgHaStatsTable.discovery
+              tags:
+                - tag: Firewall
+                  value: '{#HA_SN}'
+                - tag: ha
+                  value: firewall
+              trigger_prototypes:
+                - uuid: d857c1efe3de4e27b5a83f24c50b8abd
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgHaStatsSyncStatus.["{#HA_NAME}"])<>1'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgHaStatsSyncStatus.["{#HA_NAME}"])=1'
+                  name: 'HA Cluster Member {#HA_NAME} in {HOST.NAME} - No Sync Status unsynchronized'
+                  priority: HIGH
+          master_item:
+            key: fgHaStatsTable.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#HA_NAME}": net.HANAME,
+                          "{#HA_SN}": net.HASN
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: 53ce63426085443a93689d5e75c19649
+          name: '04- Discovery VPN IPSec'
+          type: DEPENDENT
+          key: Discovery.VPN.IPSec
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 69187b0915444d2b999ab017e6789cd1
+              name: 'Interface {#FG_VPNIPSECNAME}: Dial up dest'
+              type: DEPENDENT
+              key: 'fgVpnDialupDstAddr.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGIPSECDEST.first()'
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: b8e9020dbf444098be6d5e13a0ae171a
+              name: 'Interface {#FG_VPNIPSECNAME}: Gateway'
+              type: DEPENDENT
+              key: 'fgVpnDialupGateway.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGVPNIPSECGATEWAY.first()'
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: dc79b9f6c9474821b29c057910531770
+              name: 'Interface {#FG_VPNIPSECNAME}: Dial up Life time'
+              type: DEPENDENT
+              key: 'fgVpnDialupLifetime.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGVPNIPSECLIFE.first()'
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: 0a991e92ece945e9b5651d9681494eaa
+              name: 'Interface {#FG_VPNIPSECNAME}: Dial up src'
+              type: DEPENDENT
+              key: 'fgVpnDialupSrcBegin.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGIPSECSRC.first()'
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: dc689e6ac101406bae382c67841678f4
+              name: 'Interface {#FG_VPNIPSECNAME}: Bits received'
+              type: DEPENDENT
+              key: 'fgVpnIPsecInOctets.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGIFINOCTETS.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: 052942e1011044f1b75600293fc2bd83
+              name: 'Interface {#FG_VPNIPSECNAME}: Bits sent'
+              type: DEPENDENT
+              key: 'fgVpnIPsecOutOctets.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGIFOUTOCTETS.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+            - uuid: 4bc5c040b3924c1a9d94f08ff9989200
+              name: 'Interface {#FG_VPNIPSECNAME}: Operational status'
+              type: DEPENDENT
+              key: 'fgVpnIPsecStatus.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGVPNIPSECSTATUS.first()'
+              master_item:
+                key: fgVpnDialupTable.discovery
+              tags:
+                - tag: application
+                  value: 'IPSec VPN Tunnel'
+                - tag: 'vpn ipsec'
+                  value: '{#FG_VPNIPSECNAME}'
+              trigger_prototypes:
+                - uuid: 3070cffdf6ca4877b2dc78ad681f81c0
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgVpnIPsecStatus.["{#FG_SNMPINDEX}"],#2)=0'
+                  name: 'Interface VPN IPSec {#IF_IFALIAS} ({#IF_IFNAME}): in {HOST.NAME} Link down'
+                  priority: HIGH
+          master_item:
+            key: fgVpnDialupTable.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_VPNIPSECNAME}": net.FGVPNIPSECNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: 71cf4fbfbf1049158257c59040252efe
+          name: '05- Discovery VPN SSL Users'
+          type: DEPENDENT
+          key: Discovery.vpn.ssl.users
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 2c5d7d1c1266485689c2aa138484f758
+              name: 'Status user ssl vpn {#FG_VPNSSLUSERNAME}'
+              type: DEPENDENT
+              key: 'fgVpnSSLStatus.["{#FG_SNMPINDEX}"]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FGUSERSTATUS.first()'
+              master_item:
+                key: fgVpnTunEntIndex.discovery
+              tags:
+                - tag: 'vpn ssl'
+                  value: users
+          master_item:
+            key: fgVpnTunEntIndex.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FG_VPNSSLUSERNAME}": net.FGUSERNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+        - uuid: dfe68c4ddd84464e9d192e6b95f0b578
+          name: '06- Discovery Wireless'
+          type: DEPENDENT
+          key: Discovery.Wireless
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 0c33092f9db14a0287da50127c65c8b7
+              name: 'FortiAP {#FORTIAP_NAME}: Serial Number'
+              type: DEPENDENT
+              key: 'fgWcWtpConfigWtpId.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPSN.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: a78d84d1e39d44928927338a0e24285b
+              name: 'FortiAP {#FORTIAP_NAME}: Status'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPSTATUS.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+              trigger_prototypes:
+                - uuid: 8d11e4a40d344a38bf2b5b59708ae8a4
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}],#2)=1'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}],#2)=2'
+                  name: 'FortiAP {#FORTIAP_NAME}:  in {HOST.NAME} is DOWN Status: {ITEM.LASTVALUE1}'
+                  priority: HIGH
+                - uuid: b8bdc7f3e676483180e13b1b51e23732
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}])=3'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}])=2'
+                  name: 'FortiAP {#FORTIAP_NAME}: is receiving firmware update from {HOST.NAME} Status: {ITEM.LASTVALUE1}'
+                  priority: INFO
+                - uuid: 354ffea2c388411cbbd28d72c9ade7a1
+                  expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}])=4'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionConnectionState.[{#FG_SNMPINDEX}])=2'
+                  name: 'FortiAP {#FORTIAP_NAME}: is sending firmware to {HOST.NAME} Status: {ITEM.LASTVALUE1}'
+                  priority: INFO
+            - uuid: fda25abc5f5749579eb8c16d6dda623d
+              name: 'FortiAP {#FORTIAP_NAME}: Byte Count Rate (Rx)'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpByteRxCount.rate.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPRX.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: d730be46b41f4af6934a70d8a59abb83
+              name: 'FortiAP {#FORTIAP_NAME}: Byte Count Rate (Tx)'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpByteTxCount.rate.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              units: bps
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPTX.first()'
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: cd830e0a425942328aaee1bf1027c25b
+              name: 'FortiAP {#FORTIAP_NAME}: CPU Usage'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpCpuUsage.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPCPU.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: 5333f83aa38d4643b611268ce185e75f
+              name: 'FortiAP {#FORTIAP_NAME}: Memory Usage'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpMemoryUsage.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPMEM.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: 0e397e9b7cbf4d06b8424957b1548f9d
+              name: 'FortiAP {#FORTIAP_NAME}: Model Number'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpModelNumber.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPMODEL.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: b360c53b2ec0499c9ec86beb5d64b95f
+              name: 'FortiAP {#FORTIAP_NAME}: Uptime (Session)'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpSessionUpTime.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              units: uptime
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPUPTIME.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+              trigger_prototypes:
+                - uuid: d84b2633f76e47e39fa4a15e926a564a
+                  expression: 'change(/03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2/fgWcWtpSessionWtpSessionUpTime.[{#FG_SNMPINDEX}])<0'
+                  name: 'FortiAP {#FORTIAP_NAME}: session with {HOST.NAME} has been restarted'
+                  priority: WARNING
+            - uuid: 095903b749504e5fa540227e4d6b7333
+              name: 'FortiAP {#FORTIAP_NAME}: Connected Clients'
+              type: DEPENDENT
+              key: 'fgWcWtpSessionWtpStationCount.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPCNTCLIENTCOUNT.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+            - uuid: 897340c020db463e8c9228424baf2c4d
+              name: 'FortiAP {#FORTIAP_NAME}: Administrative Status'
+              type: DEPENDENT
+              key: 'FORTIAPADMSTATUS.[{#FG_SNMPINDEX}]'
+              delay: '0'
+              history: 7d
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$[?(@.SNMPINDEX == "{#FG_SNMPINDEX}")].FORTIAPADMSTATUS.first()'
+              master_item:
+                key: fgWcWtpConfigWtpId.discovery
+              tags:
+                - tag: application
+                  value: wirelles
+                - tag: FortiAP
+                  value: status
+                - tag: FortiAP
+                  value: '{#FORTIAP_NAME}'
+          master_item:
+            key: fgWcWtpConfigWtpId.discovery
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  output = JSON.parse(value).map(function(net){
+                      return {
+                          "{#FG_SNMPINDEX}": net.SNMPINDEX,
+                          "{#FORTIAP_SN}": net.FORTIAPSN,
+                          "{#FORTIAP_NAME}": net.FORTIAPNAME
+                  
+                      }})
+                  return JSON.stringify({"data": output})
+      macros:
+        - macro: '{$CPU.UTIL.CRIT.MAX}'
+          value: '90'
+        - macro: '{$CPU_TYPE_MATCH}'
+          value: '^(12356.101.4.4.3.1|12356.101.4.4.3.2|12356.101.4.4.3.3|Processor Intel)'
+        - macro: '{$FG_SENSORNAME_FAN_MATCH}'
+          value: '^(FAN[0-9])$'
+        - macro: '{$FG_SENSORNAME_TEM_MATCH}'
+          value: '^(FAN_TMP|CPU Core|CPU0|CPU1|CPU ON-DIE)'
+        - macro: '{$ICMP_LOSS_WARN}'
+          value: '20'
+        - macro: '{$ICMP_RESPONSE_TIME_WARN}'
+          value: '0.15'
+        - macro: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
+          value: ^2$
+        - macro: '{$NET.IF.IFNAME.NOT_MATCHES}'
+          value: '(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})'
+        - macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+      valuemaps:
+        - uuid: 1e8a584348c04fbaba90bba52de9ac01
+          name: 'Alarm state'
+          mappings:
+            - value: '0'
+              newvalue: Ok
+            - value: '1'
+              newvalue: Alarm
+        - uuid: cc9d26b47f0b4f3c8a85ac8cec0d2386
+          name: 'Firewall HA Sync Status'
+          mappings:
+            - value: '0'
+              newvalue: unsynchronized
+            - value: '1'
+              newvalue: synchronized
+        - uuid: 2881d45bfe9648d1a03e15cd3baa6273
+          name: 'FortiAP Administrative Status'
+          mappings:
+            - value: '0'
+              newvalue: other
+            - value: '1'
+              newvalue: discovered
+            - value: '2'
+              newvalue: disable
+            - value: '3'
+              newvalue: enable
+        - uuid: 78309f07c79d408595f279ae5e912d70
+          name: 'FortiAP  Status'
+          mappings:
+            - value: '0'
+              newvalue: other
+            - value: '1'
+              newvalue: offline
+            - value: '2'
+              newvalue: online
+            - value: '3'
+              newvalue: 'downloading Image'
+            - value: '4'
+              newvalue: 'connected Image'
+        - uuid: 34c02d983c5f42d7b260e97eab7ef0c1
+          name: 'ICMP PING STATUS'
+          mappings:
+            - value: '1'
+              newvalue: UP
+            - value: '0'
+              newvalue: DOWN
+        - uuid: 14781209d2284a8b969259ce56b4ff89
+          name: 'IF-MIB::ifOperStatus'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: 46bc72b70d364afd997f7eae16f34398
+          name: 'IF-MIB::ifType'
+          mappings:
+            - value: '1'
+              newvalue: other
+            - value: '2'
+              newvalue: regular1822
+            - value: '3'
+              newvalue: hdh1822
+            - value: '4'
+              newvalue: ddnX25
+            - value: '5'
+              newvalue: rfc877x25
+            - value: '6'
+              newvalue: ethernetCsmacd
+            - value: '7'
+              newvalue: iso88023Csmacd
+            - value: '8'
+              newvalue: iso88024TokenBus
+            - value: '9'
+              newvalue: iso88025TokenRing
+            - value: '10'
+              newvalue: iso88026Man
+            - value: '11'
+              newvalue: starLan
+            - value: '12'
+              newvalue: proteon10Mbit
+            - value: '13'
+              newvalue: proteon80Mbit
+            - value: '14'
+              newvalue: hyperchannel
+            - value: '15'
+              newvalue: fddi
+            - value: '16'
+              newvalue: lapb
+            - value: '17'
+              newvalue: sdlc
+            - value: '18'
+              newvalue: ds1
+            - value: '19'
+              newvalue: e1
+            - value: '20'
+              newvalue: basicISDN
+            - value: '21'
+              newvalue: primaryISDN
+            - value: '22'
+              newvalue: propPointToPointSerial
+            - value: '23'
+              newvalue: ppp
+            - value: '24'
+              newvalue: softwareLoopback
+            - value: '131'
+              newvalue: tunnel
+            - value: '135'
+              newvalue: l2vlan
+        - uuid: d23f9855c8f44e1a8fed8c4f934a86cb
+          name: 'User access Firewall Type'
+          mappings:
+            - value: '1'
+              newvalue: Ipv4
+        - uuid: 8ad02b80db63488595a1c558bfc3dd88
+          name: 'VPN IPSec Status'
+          mappings:
+            - value: '1'
+              newvalue: UP
+            - value: '2'
+              newvalue: DOWN
+        - uuid: bc72bf535ece467e913a660932a17ac4
+          name: 'VPN SSL Users Status'
+          mappings:
+            - value: '1'
+              newvalue: Online
+            - value: '2'
+              newvalue: Offline
+        - uuid: 3fc6751727244803865d248a01505e88
+          name: zabbix.host.available
+          mappings:
+            - value: '0'
+              newvalue: 'not available'
+            - value: '1'
+              newvalue: available
+            - value: '2'
+              newvalue: unknown
+    - uuid: dc2bbed60be44329b3e2ccb0c4363561
+      template: TEMPLATE-ZBX-MTR
+      name: TEMPLATE-ZBX-MTR
+      description: |
+        A TEMPLATE-ZBX-MTR é uma solução abrangente para monitorar a conectividade de rede usando o mtr (My traceroute). 
+        
+        Este template aproveita os recursos avançados do Zabbix, incluindo Itens Mestres, processamento JSONPath e Itens Dependentes, para fornecer uma visão detalhada do desempenho da rede.
+        
+        Ele monitora vários indicadores chave do MTR, incluindo:
+        - Média (avg) 
+        - Último (last)
+        - Perda de pacotes (loss) 
+        - Endereço IP (ip) 
+        
+        Permitindo uma análise precisa e em tempo real da qualidade da conexão de rede.
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: 1007faf4cdfd4143a04fc52fb7cab818
+          name: 'ZBX MTR Trace Core'
+          type: EXTERNAL
+          key: 'zbx-mtr.sh[{$ALVO}]'
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.report.hubs
+          tags:
+            - tag: Application
+              value: 'Master Items'
+      discovery_rules:
+        - uuid: 5604b62072a04c6da7cab8e83ee84039
+          name: 'Zabbix MTR Hops'
+          type: DEPENDENT
+          key: mtr.hop.discovery
+          delay: '0'
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: 0d
+          item_prototypes:
+            - uuid: 8f4adb30c996408f8b1bcfaa83206577
+              name: 'MTR Hop {#HOP_VALUE}: {#HOP_HOST}'
+              type: DEPENDENT
+              key: 'mtr.hop.host[{#HOP_VALUE}]'
+              delay: '0'
+              history: 7d
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.count == "{#HOP_VALUE}")].host.first()'
+              master_item:
+                key: 'zbx-mtr.sh[{$ALVO}]'
+              tags:
+                - tag: Application
+                  value: 'MTR Hosts'
+            - uuid: af529af30c9d4cd19404017d489c7131
+              name: 'MTR Hop {#HOP_VALUE}: {#HOP_HOST} - Average RTT(ms)'
+              type: DEPENDENT
+              key: 'zbx.mtr.hop.avg[{#HOP_VALUE}]'
+              delay: '0'
+              history: 7d
+              trends: 180d
+              value_type: FLOAT
+              units: '!ms'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.count == "{#HOP_VALUE}")]["Avg"].first()'
+              master_item:
+                key: 'zbx-mtr.sh[{$ALVO}]'
+              tags:
+                - tag: Application
+                  value: 'MTR Average RTT(ms)'
+            - uuid: 955dfef34cc44dca97a8e7e567ee7550
+              name: 'MTR Hop {#HOP_VALUE}: {#HOP_HOST} - Lats(ms)'
+              type: DEPENDENT
+              key: 'zbx.mtr.hop.last[{#HOP_VALUE}]'
+              delay: '0'
+              history: 7d
+              trends: 180d
+              value_type: FLOAT
+              units: '!ms'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.count == "{#HOP_VALUE}")]["Last"].first()'
+              master_item:
+                key: 'zbx-mtr.sh[{$ALVO}]'
+              tags:
+                - tag: Application
+                  value: 'MTR Last (ms)'
+            - uuid: 85a830226cde475d9547bc692f7b29f0
+              name: 'MTR Hop {#HOP_VALUE}: {#HOP_HOST} - ICMP Loss%'
+              type: DEPENDENT
+              key: 'zbx.mtr.hop.loss[{#HOP_VALUE}]'
+              delay: '0'
+              history: 7d
+              trends: 180d
+              value_type: FLOAT
+              units: '%'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.[?(@.count == "{#HOP_VALUE}")]["Loss%"].first()'
+              master_item:
+                key: 'zbx-mtr.sh[{$ALVO}]'
+              tags:
+                - tag: Application
+                  value: 'MTR Loss%'
+              trigger_prototypes:
+                - uuid: 960e0836014045cc9685e07d5cef7596
+                  expression: 'last(/TEMPLATE-ZBX-MTR/zbx.mtr.hop.loss[{#HOP_VALUE}])>3 and last(/TEMPLATE-ZBX-MTR/zbx.mtr.hop.loss[{#HOP_VALUE}])<=100'
+                  name: 'Perda de Pacotes - Acima do Limite {ITEM.LASTVALUE}'
+                  priority: INFO
+          master_item:
+            key: 'zbx-mtr.sh[{$ALVO}]'
+          lld_macro_paths:
+            - lld_macro: '{#HOP_HOST}'
+              path: '$.[''host'']'
+            - lld_macro: '{#HOP_VALUE}'
+              path: '$.[''count'']'
+      macros:
+        - macro: '{$ALVO}'
+          description: 'IP para validação via MTR'
+  graphs:
+    - uuid: 2d8c644327814b9dbecd75065691b089
+      name: 'CPU utilization'
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 1A7C11
+          calc_fnc: ALL
+          item:
+            host: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+            key: fgSysCpuUsage
+    - uuid: 46847a39b6ee4525bf3b39be23134dd5
+      name: 'ICMP Ping'
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 1A7C11
+          calc_fnc: ALL
+          item:
+            host: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+            key: icmpping
+    - uuid: 82e4d124056f4d539743e77db8d86c40
+      name: 'Memory utilization'
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 1A7C11
+          calc_fnc: ALL
+          item:
+            host: '03.01 - Template - Padrao - Passivo - Fortinet FortiGate SNMP - V2'
+            key: fgSysMemUsage
