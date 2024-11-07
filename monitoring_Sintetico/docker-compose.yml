@@ -1,8 +1,8 @@
-# docker-compose up -d
 services:
   selenium-event-bus:
     image: selenium/event-bus:${SELENIUM_VERSION}
     container_name: selenium-event-bus
+    restart: always
     ports:
       - "${EVENT_BUS_PORT_1}:4442"
       - "${EVENT_BUS_PORT_2}:4443"
@@ -11,6 +11,7 @@ services:
   selenium-sessions:
     image: selenium/sessions:${SELENIUM_VERSION}
     container_name: selenium-sessions
+    restart: always
     ports:
       - "${SESSIONS_PORT}:5556"
     depends_on:
@@ -23,12 +24,14 @@ services:
   selenium-session-queue:
     image: selenium/session-queue:${SELENIUM_VERSION}
     container_name: selenium-session-queue
+    restart: always
     ports:
       - "${SESSION_QUEUE_PORT}:5559"
 
   selenium-distributor:
     image: selenium/distributor:${SELENIUM_VERSION}
     container_name: selenium-distributor
+    restart: always
     ports:
       - "${DISTRIBUTOR_PORT}:5553"
     depends_on:
@@ -47,6 +50,7 @@ services:
   selenium-router:
     image: selenium/router:${SELENIUM_VERSION}
     container_name: selenium-router
+    restart: always
     ports:
       - "${ROUTER_PORT}:4444"
     depends_on:
@@ -64,6 +68,7 @@ services:
   chrome:
     image: selenium/node-chrome:${SELENIUM_VERSION}
     shm_size: ${SHM_SIZE}
+    restart: always
     depends_on:
       - selenium-event-bus
     environment:
@@ -74,6 +79,7 @@ services:
   edge:
     image: selenium/node-edge:${SELENIUM_VERSION}
     shm_size: ${SHM_SIZE}
+    restart: always
     depends_on:
       - selenium-event-bus
     environment:
@@ -84,6 +90,7 @@ services:
   firefox:
     image: selenium/node-firefox:${SELENIUM_VERSION}
     shm_size: ${SHM_SIZE}
+    restart: always
     depends_on:
       - selenium-event-bus
     environment:
