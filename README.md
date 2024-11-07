@@ -54,15 +54,20 @@ A estrutura de arquivos e diretórios do projeto é organizada da seguinte forma
 
 Clone o repositório para o seu ambiente local:
 
+```bash
 git clone https://github.com/marioalvesluck/docker_zabbix_partition.git
 cd docker_zabbix_partition
+```
 
 ### Passo 2: Configurar Variáveis de Ambiente
 
 Certifique-se de definir as variáveis de ambiente no arquivo `.env` para personalizar as credenciais e configurações do MySQL e do Zabbix:
 
-# Configurações Zabbix .env
+### Tempo de Retenção dos Dados : part.sql configurar de acordo sua Politica de Retençao de Dados
 
+## Configurações Zabbix .env
+
+```plaintext
 MYSQL_ROOT_PASSWORD=Zabbix2024!
 MYSQL_DATABASE=zabbix
 MYSQL_USER=zabbix
@@ -73,8 +78,7 @@ ZBX_PROXY_HOSTNAME=NodeProxy1
 ZBX_SRV_PRIMARY_TLSPSKIDENTITY=zabbix-server-primary
 ZBX_PROXY_TLSPSKIDENTITY=NodeProxy1
 ZBX_HANODENAME=Node1
-
-### Tempo de Retenção dos Dados : part.sql configurar de acordo sua Politica de Retençao de Dados
+```
 
 O projeto utiliza particionamento para gerenciar o tempo de retenção dos dados nas tabelas do banco de dados Zabbix. A retenção é configurada nos procedimentos armazenados para que as tabelas mais volumosas mantenham apenas os dados necessários, reduzindo o tamanho do banco de dados e melhorando o desempenho.
 
@@ -155,7 +159,6 @@ Este projeto inclui hosts prontos para serem importados no ambiente Zabbix. Para
 4. Localize o arquivo de hosts a ser importado e faça o upload.
 
 Após a importação, os hosts estarão configurados e prontos para monitoramento no Zabbix.
-
 
 ## Cadastrar Proxy no Frontend do Zabbix
 
