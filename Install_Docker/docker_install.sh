@@ -8,6 +8,10 @@ sudo dnf update -y
 echo "Instalando dependências..."
 sudo dnf install -y dnf-plugins-core
 
+# Instale git necessárias
+echo "Instalando dependências..."
+sudo dnf install -y git
+
 # Adicione o repositório oficial do Docker
 echo "Adicionando repositório do Docker..."
 sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo

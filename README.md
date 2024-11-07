@@ -56,7 +56,7 @@ Clone o repositório para o seu ambiente local:
 
 ```bash
 git clone https://github.com/marioalvesluck/docker_zabbix_partition.git
-cd docker_zabbix_partition
+cd zabbix-monitoring-docker-partition
 ```
 
 ### Passo 2: Configurar Variáveis de Ambiente
