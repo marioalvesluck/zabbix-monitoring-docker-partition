@@ -117,7 +117,7 @@ http://x.x.x.x:8080/
 
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' **zabbix-proxy**
 
-![1730938231923](image/README/1730938231923.png)
+![1730989639611](image/README/1730989639611.png)
 
 ### Passo 7: Executar Manualmente Tarefa Particionamento
 
@@ -200,7 +200,7 @@ Este projeto inclui scripts para realizar manutenção e particionamento automá
 
 ### Scripts de Manutenção
 
-* **setup_zabbix.sh** : Script para configuração inicial do Zabbix e instalação Completa dos containers Zabbix.
+* **setup_zabbix.sh** : Script para configuração inicial do Zabbix.
 * **run_partition_maintenance.sh** : Executa a manutenção de particionamento no banco de dados. Recomendado para ser configurado no cron para rodar periodicamente.
 * **remove_container.sh** : Script para remover contêineres, imagens, volumes e redes personalizadas, usado para limpeza completa do ambiente.
 * **backup_mysql.sh** : Script para realizar backups, Cria um backup completo do banco de dados e o compactado,Faz backup apenas das configurações (hosts, etc.) do Zabbix.
