@@ -121,11 +121,13 @@ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' **z
 
 ### Passo 7: Executar Manualmente Tarefa Particionamento
 
-docker exec -it zabbix_all-zabbix-db-1 bash /etc/cron.daily/partition_maintenance
+Obs: Verifica NAMES do zabbix_all-zabbix-db-1 , Ajustar no comando abaixo.
+
+docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 bash /etc/cron.daily/partition_maintenance
 
 ### Passo 8: Verificar Logs do Particionamento .
 
-docker exec -it zabbix_all-zabbix-db-1 cat  /var/log/zabbix_partition_maintenance.log
+docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 cat /var/log/zabbix_partition_maintenance.log
 
 ### Passo 9: Verificar Tabelas de Particionamento Particionamento .
 
