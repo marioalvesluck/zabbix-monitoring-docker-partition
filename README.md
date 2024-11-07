@@ -121,7 +121,7 @@ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' **z
 
 ### Passo 7: Executar Manualmente Tarefa Particionamento
 
-Obs: Verifica NAMES do zabbix_all-zabbix-db-1 , Ajustar no comando abaixo.
+**Obs: Verifica NAMES do zabbix_all-zabbix-db-1 , Ajustar no comando abaixo.**
 
 docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 bash /etc/cron.daily/partition_maintenance
 
@@ -135,7 +135,7 @@ Obs: Senha esta no Aruivo **(.env)**
 
 **Comando** : Após executar esse comando, você verá uma lista de tabelas com informações de particionamento. Se não houver nenhuma linha retornada, significa que não há tabelas particionadas no banco `zabbix`. Caso contrário, o resultado mostrará cada tabela com suas partições e métodos de particionamento
 
-docker exec -it zabbix_all-zabbix-db-1 mysql -u root -pZabbix2024! -e "
+docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 mysql -u root -pZabbix2024! -e "
 SELECT
     TABLE_NAME,
     PARTITION_NAME,
