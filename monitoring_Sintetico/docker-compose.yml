@@ -1,0 +1,92 @@
+# docker-compose up -d
+services:
+  selenium-event-bus:
+    image: selenium/event-bus:${SELENIUM_VERSION}
+    container_name: selenium-event-bus
+    ports:
+      - "${EVENT_BUS_PORT_1}:4442"
+      - "${EVENT_BUS_PORT_2}:4443"
+      - "5557:5557"
+
+  selenium-sessions:
+    image: selenium/sessions:${SELENIUM_VERSION}
+    container_name: selenium-sessions
+    ports:
+      - "${SESSIONS_PORT}:5556"
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+
+  selenium-session-queue:
+    image: selenium/session-queue:${SELENIUM_VERSION}
+    container_name: selenium-session-queue
+    ports:
+      - "${SESSION_QUEUE_PORT}:5559"
+
+  selenium-distributor:
+    image: selenium/distributor:${SELENIUM_VERSION}
+    container_name: selenium-distributor
+    ports:
+      - "${DISTRIBUTOR_PORT}:5553"
+    depends_on:
+      - selenium-event-bus
+      - selenium-sessions
+      - selenium-session-queue
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+      - SE_SESSIONS_MAP_HOST=selenium-sessions
+      - SE_SESSIONS_MAP_PORT=${SESSIONS_PORT}
+      - SE_SESSION_QUEUE_HOST=selenium-session-queue
+      - SE_SESSION_QUEUE_PORT=${SESSION_QUEUE_PORT}
+
+  selenium-router:
+    image: selenium/router:${SELENIUM_VERSION}
+    container_name: selenium-router
+    ports:
+      - "${ROUTER_PORT}:4444"
+    depends_on:
+      - selenium-distributor
+      - selenium-sessions
+      - selenium-session-queue
+    environment:
+      - SE_DISTRIBUTOR_HOST=selenium-distributor
+      - SE_DISTRIBUTOR_PORT=${DISTRIBUTOR_PORT}
+      - SE_SESSIONS_MAP_HOST=selenium-sessions
+      - SE_SESSIONS_MAP_PORT=${SESSIONS_PORT}
+      - SE_SESSION_QUEUE_HOST=selenium-session-queue
+      - SE_SESSION_QUEUE_PORT=${SESSION_QUEUE_PORT}
+
+  chrome:
+    image: selenium/node-chrome:${SELENIUM_VERSION}
+    shm_size: ${SHM_SIZE}
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+
+  edge:
+    image: selenium/node-edge:${SELENIUM_VERSION}
+    shm_size: ${SHM_SIZE}
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+
+  firefox:
+    image: selenium/node-firefox:${SELENIUM_VERSION}
+    shm_size: ${SHM_SIZE}
+    depends_on:
+      - selenium-event-bus
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-event-bus
+      - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}

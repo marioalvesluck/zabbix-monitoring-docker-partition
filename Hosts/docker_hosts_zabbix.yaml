@@ -1,0 +1,53 @@
+zabbix_export:
+  version: '7.0'
+  host_groups:
+    - uuid: 6f6799aa69e844b4b3918f779f2abf08
+      name: 'Zabbix servers'
+  hosts:
+    - host: zabbix-db
+      name: zabbix-db
+      templates:
+        - name: 'Linux by Zabbix agent active'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.11
+          interface_ref: if1
+      inventory_mode: DISABLED
+    - host: zabbix-proxy
+      name: zabbix-proxy
+      templates:
+        - name: 'Linux by Zabbix agent'
+        - name: 'Zabbix proxy health'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.14
+          interface_ref: if1
+      inventory_mode: DISABLED
+    - host: zabbix-server
+      name: zabbix-server
+      templates:
+        - name: 'Linux by Zabbix agent'
+        - name: 'Zabbix server health'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.10
+          interface_ref: if1
+      inventory:
+        name: 43d56dd6fa13
+        os: 'Linux version 5.15.0-301.163.5.2.el9uek.x86_64 (mockbuild@host-100-100-224-31) (gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3.0.1)'
+        location_lat: '56.95387'
+        location_lon: '24.22067'
+      inventory_mode: AUTOMATIC
+    - host: zabbix-web
+      name: zabbix-web
+      templates:
+        - name: 'Linux by Zabbix agent active'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.9
+          interface_ref: if1
+      inventory_mode: DISABLED

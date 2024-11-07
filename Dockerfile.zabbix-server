@@ -1,0 +1,21 @@
+# Dockerfile.zabbix-server
+FROM zabbix/zabbix-server-mysql:ubuntu-latest
+
+USER root
+
+# Configurar o fuso horário
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Instalar pacotes adicionais
+RUN mkdir -p /var/lib/apt/lists/partial && \
+    chmod -R 755 /var/lib/apt/lists && \
+    apt-get update && \
+    apt-get install -y nano vim htop snmp-mibs-downloader \
+                       unixodbc unixodbc-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copiar o arquivo de configuração my.cnf para o contêiner
+COPY my.cnf /etc/mysql/my.cnf
+
+USER zabbix

@@ -1,0 +1,24 @@
+# Use a imagem base do Grafana
+FROM grafana/grafana-oss
+
+# Defina o fuso horário com uma variável para facilitar a alteração
+ARG TZ=America/Sao_Paulo
+ENV TZ=${TZ}
+
+# Instale plugins do Grafana um a um
+RUN grafana-cli plugins install marcusolsson-dynamictext-panel \
+    && grafana-cli plugins install alexanderzobnin-zabbix-app \
+    && grafana-cli plugins install marcusolsson-calendar-panel \
+    && grafana-cli plugins install marcusolsson-static-datasource \
+    && grafana-cli plugins install volkovlabs-echarts-panel \
+    && grafana-cli plugins install gapit-htmlgraphics-panel \
+    && grafana-cli plugins install grafana-clock-panel
+
+# Adicione a configuração disable_sanitize_html ao grafana.ini
+COPY grafana.ini /etc/grafana/grafana.ini
+
+# Defina volumes para persistência de dados
+VOLUME ["/var/lib/grafana", "/var/log/grafana"]
+
+# Exponha a porta padrão do Grafana
+EXPOSE 3000

@@ -1,0 +1,21 @@
+services:
+  grafana:
+    build:
+      context: .
+      dockerfile: Grafana-Dockerfile/Dockerfile.Grafana
+      args:
+        TZ: ${TZ}
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin          # Usuário padrão do Grafana
+      - GF_SECURITY_ADMIN_PASSWORD=admin      # Senha padrão do Grafana
+      - TZ=${TZ}                              # Fuso horário definido no .env
+    ports:
+      - "3000:3000"                           # Porta do Grafana
+    volumes:
+      - grafana_data:/var/lib/grafana         # Volume para persistência de dados
+      - grafana_logs:/var/log/grafana         # Volume para logs
+
+volumes:
+  grafana_data:
+  grafana_logs:
