@@ -1,4 +1,4 @@
-## Projeto Docker Zabbix Completo com Particionamento e Manutenção - Oracle Linux 9 - Zabbix 7.0.5
+## Projeto Docker Zabbix com Particionamento e Manutenção - Oracle Linux 9 - Zabbix 7.0.5
 
 Este projeto utiliza contêineres Docker para configurar e gerenciar o ambiente Zabbix com suporte a particionamento de banco de dados e scripts de manutenção automatizada. É ideal para quem busca uma solução completa de monitoramento com configuração e manutenção simplificadas.
 
@@ -87,13 +87,13 @@ As tabelas principais e o tempo de retenção configurado para cada uma são os 
 * **Tabelas de Histórico** (`history`, `history_log`, `history_str`, `history_text`, `history_uint`):
   * **Tempo de Retenção** : 60 dias
   * **Intervalo de Partição** : 24 horas
-  * **Próximas Partições Criadas** : 10 intervalos futuros
+  * **Próximas Partições Criadas** : 60 intervalos futuros
   * **Descrição** : Essas tabelas armazenam dados de histórico detalhado do Zabbix. Cada tabela é particionada por dia e mantém apenas os dados dos últimos 60 dias. A cada manutenção, novas partições são criadas para os próximos 10 dias, enquanto partições mais antigas que 60 dias são removidas.
 * **Tabelas de Tendências** (`trends`, `trends_uint`):
   * **Tempo de Retenção** : 365 dias
-  * **Intervalo de Partição** : 24 horas
-  * **Próximas Partições Criadas** : 10 intervalos futuros
-  * **Descrição** : Essas tabelas armazenam dados de tendências agregadas, que geralmente são úteis para análises de longo prazo. Cada partição representa um dia e os dados são mantidos por até um ano (365 dias). A manutenção cria partições para os próximos 10 dias e remove partições mais antigas que um ano.
+  * **Intervalo de Partição** : 720 horas
+  * **Próximas Partições Criadas** : 12 intervalos futuros
+  * **Descrição** : Essas tabelas armazenam dados de tendências agregadas, que geralmente são úteis para análises de longo prazo. Cada partição representa um dia e os dados são mantidos por até um ano (365 dias). A manutenção cria partições para os próximos 12 dias e remove partições mais antigas que um ano.
 
 ### Passo 3: Configuração Inicial do Zabbix
 
@@ -113,7 +113,7 @@ Exe: http://192.168.0.250:8080/
 
 http://x.x.x.x:8080/
 
-### Passo 6: Verifique os IPS, Passando NAMES
+### Passo 6: Verifique os IPS, Passando NAMES ou  ContainerID
 
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' **zabbix-proxy**
 
@@ -134,8 +134,6 @@ docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 bash /etc/cron.da
 ### Passo 8: Verificar Logs do Particionamento .
 
 docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 cat /var/log/zabbix_partition_maintenance.log
-
-
 
 ### Passo 9: Verificar Tabelas de Particionamento Particionamento .
 
