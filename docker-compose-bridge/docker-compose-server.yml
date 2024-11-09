@@ -1,0 +1,64 @@
+services:
+  zabbix-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-server
+    container_name: zabbix-server
+    environment:
+      DB_SERVER_HOST: "zabbix-db"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      ZBX_DEBUGLEVEL: 3
+      ZBX_STARTPINGERS: 10
+      ZBX_STARTPOLLERPROCESSES: 10
+      ZBX_STARTDBSYNCERS: 8
+      ZBX_STARTREPORTWRITERS: 5
+      ZBX_CACHESIZE: 512M
+      ZBX_HISTORYCACHESIZE: 512M
+      ZBX_HISTORYINDEXCACHESIZE: 512M
+      ZBX_TRENDCACHESIZE: 256M
+      ZBX_VALUECACHESIZE: 256M
+      ZBX_TIMEOUT: 30
+      ZBX_UNREACHABLEPERIOD: 300
+      ZBX_UNAVAILABLEDELAY: 60
+      ZBX_UNREACHABLEDELAY: 60
+      ZBX_STARTBROWSERPOLLERS: 5
+      ZBX_STARTLLDWORKERS: 5
+      ZBX_HANODENAME: "${ZBX_HANODENAME}"
+      ZBX_NODEADDRESS: "172.18.0.8:10051"
+      ZBX_WEBSERVICEURL: "http://zabbix-web-service:10053/report"
+      ZBX_WEBDRIVERURL: "http://localhost:4444"
+      ZBX_TLSCONNECT: psk
+      ZBX_TLSACCEPT: psk
+      ZBX_TLSPSKIDENTITY: "${ZBX_SRV_PRIMARY_TLSPSKIDENTITY}"
+      ZBX_TLSPSKFILE: /var/lib/zabbix/zabbix-server/enc/zabbix_server.psk
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/lib/zabbix/mysql:/var/lib/mysql
+      - /var/lib/zabbix/zabbix-server/enc:/var/lib/zabbix/zabbix-server/enc
+      - ./my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "10051:10051"
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
+
+  zabbix-web:
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-latest
+    container_name: zabbix-web
+    environment:
+      DB_SERVER_HOST: "zabbix-db"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+      PHP_TZ: "${PHP_TZ}"
+      TZ: "${PHP_TZ}"
+    depends_on:
+      - zabbix-db
+      - zabbix-server
+    ports:
+      - "8080:8080"
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

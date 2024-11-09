@@ -1,0 +1,52 @@
+services:
+  zabbix-agent-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-agent
+    container_name: zabbix-agent-server
+    environment:
+      ZBX_HOSTNAME: "${ZBX_SERVER_HOST}"
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+    depends_on:
+      - zabbix-server
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
+
+  zabbix-agent-db:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-agent
+    container_name: zabbix-agent-db
+    environment:
+      ZBX_HOSTNAME: "zabbix-db"
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+    depends_on:
+      - zabbix-server
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
+
+  zabbix-agent-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-agent
+    container_name: zabbix-agent-web
+    environment:
+      ZBX_HOSTNAME: "zabbix-web"
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+    depends_on:
+      - zabbix-server
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
+
+  zabbix-agent-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-agent
+    container_name: zabbix-agent-proxy
+    environment:
+      ZBX_HOSTNAME: "${ZBX_PROXY_HOSTNAME}"
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+    depends_on:
+      - zabbix-proxy
+    network_mode: "host"  # Usando a rede local do host
+    restart: always
