@@ -1,0 +1,15 @@
+# Configurações do Banco de Dados MySQL
+MYSQL_ROOT_PASSWORD=Zabbix2024!
+MYSQL_DATABASE=zabbix
+MYSQL_USER=zabbix
+MYSQL_PASSWORD=Serverzabbix!
+
+# Configurações de Fuso Horário para o PHP no Zabbix Web
+PHP_TZ=America/Sao_Paulo
+
+# Configurações de HA no Zabbix Server e Proxy
+ZBX_SERVER_HOST=zabbix-server
+ZBX_HANODENAME=Node1
+ZBX_PROXY_HOSTNAME=NodeProxy1
+ZBX_PROXY_TLSPSKIDENTITY=NodeProxy1
+ZBX_SRV_PRIMARY_TLSPSKIDENTITY=zabbix-server-primary

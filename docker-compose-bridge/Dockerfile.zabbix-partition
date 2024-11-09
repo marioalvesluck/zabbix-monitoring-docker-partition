@@ -1,0 +1,18 @@
+# Dockerfile para o MySQL com particionamento
+FROM mysql:8.0
+
+# Copia o script part.sql para o contêiner
+COPY part.sql /docker-entrypoint-initdb.d/
+
+ENV TZ=America/Sao_Paulo
+
+# Configurar o fuso horário
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Define permissões para o script
+RUN chmod +x /docker-entrypoint-initdb.d/part.sql
+
+# Configura o particionamento como parte do processo de inicialização
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mysqld"]
+
