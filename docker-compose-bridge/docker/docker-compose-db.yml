@@ -21,6 +21,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
       - /var/log/mysql:/var/log/mysql  # Logs do MySQL
+    ports:
+      - "3306:3306"  # Expondo a porta padrão do MySQL
     network_mode: "host"  # Utilizando a rede local do host
     restart: always
     healthcheck:
