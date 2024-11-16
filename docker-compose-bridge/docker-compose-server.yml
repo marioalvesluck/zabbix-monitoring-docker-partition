@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.zabbix-server
     container_name: zabbix-server
     environment:
-      DB_SERVER_HOST: "zabbix-db"
+      DB_SERVER_HOST: "${DB_SERVER_HOST_IP}"
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
@@ -26,9 +26,9 @@ services:
       ZBX_STARTBROWSERPOLLERS: 5
       ZBX_STARTLLDWORKERS: 5
       ZBX_HANODENAME: "${ZBX_HANODENAME}"
-      ZBX_NODEADDRESS: "172.18.0.8:10051"
-      ZBX_WEBSERVICEURL: "http://zabbix-web-service:10053/report"
-      ZBX_WEBDRIVERURL: "http://localhost:4444"
+      ZBX_NODEADDRESS: "${ZBX_SERVER_HOST}:10051"
+      ZBX_WEBSERVICEURL: "http://${ZBX_FRONT_HOST}:10053/report"
+      ZBX_WEBDRIVERURL: "http://${ZBX_PROXY_HOST}:4444"
       ZBX_TLSCONNECT: psk
       ZBX_TLSACCEPT: psk
       ZBX_TLSPSKIDENTITY: "${ZBX_SRV_PRIMARY_TLSPSKIDENTITY}"
@@ -42,23 +42,3 @@ services:
       - "10051:10051"
     network_mode: "host"  # Usando a rede local do host
     restart: always
-
-  zabbix-web:
-    image: zabbix/zabbix-web-apache-mysql:ubuntu-latest
-    container_name: zabbix-web
-    environment:
-      DB_SERVER_HOST: "zabbix-db"
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
-      PHP_TZ: "${PHP_TZ}"
-      TZ: "${PHP_TZ}"
-    depends_on:
-      - zabbix-db
-      - zabbix-server
-    ports:
-      - "8080:8080"
-    network_mode: "host"  # Usando a rede local do host
-    restart: always
-    volumes:
-      - /etc/localtime:/etc/localtime:ro

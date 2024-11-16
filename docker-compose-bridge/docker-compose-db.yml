@@ -16,8 +16,15 @@ services:
     ]
     volumes:
       - /var/lib/zabbix/mysql:/var/lib/mysql
-      - ./part.sql:/docker-entrypoint-initdb.d/part.sql
+      - ./part.sql:/docker-entrypoint-initdb.d/part.sql  # Mantido para particionamento
+      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql  # Novo arquivo para criar usuários
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
+      - /var/log/mysql:/var/log/mysql  # Logs do MySQL
     network_mode: "host"  # Utilizando a rede local do host
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
