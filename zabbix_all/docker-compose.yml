@@ -19,6 +19,8 @@ services:
       - ./part.sql:/docker-entrypoint-initdb.d/part.sql
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3306:3306"
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.5

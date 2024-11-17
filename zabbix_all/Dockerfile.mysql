@@ -1,14 +1,20 @@
-# Dockerfile.mysql
 FROM mysql:8.0
 
 USER root
 
-# Defina variáveis de ambiente e comandos extras se necessário
-ENV MYSQL_ROOT_PASSWORD=Zabbix2024!
-ENV MYSQL_DATABASE=zabbix
-ENV MYSQL_USER=zabbix
-ENV MYSQL_PASSWORD=Serverzabbix!
-ENV TZ=America/Sao_Paulo
+# Defina argumentos para o build
+ARG MYSQL_ROOT_PASSWORD
+ARG MYSQL_DATABASE
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
+ARG TZ
+
+# Use os argumentos para definir variáveis de ambiente no contêiner
+ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ENV TZ=${TZ}
 
 # Configurar o fuso horário
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
