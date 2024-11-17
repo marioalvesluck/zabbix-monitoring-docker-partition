@@ -11,9 +11,9 @@ log "Iniciando configuração do frontend do Zabbix."
 FRONT_COMPOSE="docker-compose-front.yml"
 
 log "Construindo imagem Docker para $FRONT_COMPOSE..."
-docker-compose -f "$FRONT_COMPOSE" build
+docker-compose --env-file ../configs/.env -f "$FRONT_COMPOSE" build
 
 log "Iniciando contêiner Docker para $FRONT_COMPOSE..."
-docker-compose -f "$FRONT_COMPOSE" up -d
+docker-compose --env-file ../configs/.env -f "$FRONT_COMPOSE" up -d
 
 log "Configuração do frontend do Zabbix concluída."

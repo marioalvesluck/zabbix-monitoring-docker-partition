@@ -24,9 +24,9 @@ chmod 775 "$PROXY_PSK_FILE"
 
 # Construindo e iniciando o contêiner do Zabbix Proxy
 log "Construindo imagem Docker do Zabbix Proxy..."
-docker-compose -f docker-compose-proxy.yml build
+docker-compose --env-file ../configs/.env -f docker-compose-proxy.yml build
 
 log "Iniciando contêiner do Zabbix Proxy..."
-docker-compose -f docker-compose-proxy.yml up -d
+docker-compose --env-file ../configs/.env -f docker-compose-proxy.yml up -d
 
 log "Configuração do Zabbix Proxy concluída."
