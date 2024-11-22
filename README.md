@@ -141,7 +141,9 @@ Obs: Senha esta no Aruivo **(.env)**
 
 **Comando** : Após executar esse comando, você verá uma lista de tabelas com informações de particionamento. Se não houver nenhuma linha retornada, significa que não há tabelas particionadas no banco `zabbix`. Caso contrário, o resultado mostrará cada tabela com suas partições e métodos de particionamento
 
-docker exec -it zabbix-monitoring-docker-partition-zabbix-db-1 mysql -u root -pZabbix2024! -e "
+docker exec -it -u root zabbix-zabbix-db-1 bash -c '
+export MYSQL_PWD="Serverzabbix!";
+mysql -u "zabbix" -h "127.0.0.1" "zabbix" -e "
 SELECT
     TABLE_NAME,
     PARTITION_NAME,
@@ -153,9 +155,8 @@ SELECT
 FROM
     information_schema.PARTITIONS
 WHERE
-    TABLE_SCHEMA = 'zabbix'
-    AND PARTITION_NAME IS NOT NULL;
-"
+    TABLE_SCHEMA = '\''zabbix'\''
+    AND PARTITION_NAME IS NOT NULL;"'
 
 ## Importar Hosts no Zabbix
 
