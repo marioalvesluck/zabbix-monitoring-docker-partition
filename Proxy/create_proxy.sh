@@ -18,6 +18,7 @@ ZABBIX_PROXY_SERVICE="zabbix-proxy"
 ZABBIX_PROXY_PSK="zabbix-proxy"
 PROXY_PSK_FILE="/var/lib/zabbix/zabbix-proxy/enc/zabbix_proxy.psk"
 ZABBIX_CONF="/etc/zabbix/zabbix_proxy.conf"
+WebDriverURL="${DB_SERVER}:4444"
 
 # Início do script
 log "Início da configuração do Zabbix Proxy." | tee -a "$LOG_FILE"

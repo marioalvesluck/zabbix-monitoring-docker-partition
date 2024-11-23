@@ -2,7 +2,7 @@ services:
   zabbix-db:
     build:
       context: .
-      dockerfile: Dockerfile.mysql
+      dockerfile: Dockerfile.zabbix-partition
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
