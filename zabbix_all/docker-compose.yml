@@ -2,7 +2,7 @@ services:
   zabbix-db:
     build:
       context: .
-      dockerfile: Dockerfile.mysql-partition
+      dockerfile: Dockerfile.zabbix-partition
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
@@ -17,6 +17,7 @@ services:
     volumes:
       - /var/lib/zabbix/mysql:/var/lib/mysql
       - ./part.sql:/docker-entrypoint-initdb.d/part.sql
+      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
     ports:

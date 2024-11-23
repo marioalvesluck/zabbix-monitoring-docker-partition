@@ -43,4 +43,3 @@ EXPOSE 3306
 
 # Configurar o ponto de entrada e iniciar o serviço de cron junto com o MySQL
 CMD crond && mysqld
-
