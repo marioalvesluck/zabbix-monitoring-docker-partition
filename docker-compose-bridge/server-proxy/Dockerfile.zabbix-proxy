@@ -16,10 +16,10 @@ RUN mkdir -p /var/lib/apt/lists/partial && \
     rm -rf /var/lib/apt/lists/*
 
 # Copiar os arquivos de configuração ODBC
-COPY drivers_odbc_mysql/libmyodbc8a.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8a.so
-COPY drivers_odbc_mysql/libmyodbc8w.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so
-COPY drivers_odbc_mysql/odbcinst.ini /etc/odbcinst.ini
-COPY drivers_odbc_mysql/odbc.ini /etc/odbc.ini
+COPY libmyodbc8a.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8a.so
+COPY libmyodbc8w.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so
+COPY odbcinst.ini /etc/odbcinst.ini
+COPY odbc.ini /etc/odbc.ini
 
 # Definir permissões e proprietário para os drivers
 RUN chmod 644 /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8*.so && \
