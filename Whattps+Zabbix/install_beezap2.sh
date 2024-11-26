@@ -137,13 +137,6 @@ nvm install node
 nvm use node
 echo "Node.js instalado." | tee -a $LOG_FILE
 
-# Verificar se npm está disponível
-#echo "Verificando instalação do npm..." | tee -a $LOG_FILE
-#if ! command -v npm &> /dev/null; then
-#    echo "npm não encontrado, tentando carregar NVM..." | tee -a $LOG_FILE
-#    source "$NVM_DIR/nvm.sh"
-#fi
-
 # Iniciar projeto dentro da pasta /opt/beezap2/
 echo "Iniciando projeto e instalando dependências npm..." | tee -a $LOG_FILE
 npm init -y
@@ -181,7 +174,7 @@ echo "Dependências npm instaladas." | tee -a $LOG_FILE
 
 # Realizar sed no arquivo package.json
 echo "Atualizando whatsapp-web.js no package.json..."
-sed -i 's/"whatsapp-web.js": "^1.24.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
+sed -i 's/"whatsapp-web.js": "^1.26.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
 echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
 
 # Realizar update e instalação do whatsapp-web.js#webpack-exodus
