@@ -47,5 +47,5 @@ services:
       - /var/lib/zabbix/zabbix-proxy/enc:/var/lib/zabbix/enc
       - /var/lib/zabbix/zabbix-proxy/mibs:/var/lib/zabbix/mibs
       - ./my.cnf:/etc/mysql/my.cnf
-    network_mode: "host"  # Usando a rede local do host
+    network_mode: host  # Correção no alinhamento
     restart: always
