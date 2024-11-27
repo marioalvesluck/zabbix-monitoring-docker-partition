@@ -25,10 +25,10 @@ services:
       ZBX_STARTHTTPPOLLERS: 5
       ZBX_HOUSEKEEPINGFREQUENCY: 1
       ZBX_STARTVMWARECOLLECTORS: 1
-      ZBX_CACHESIZE: 1024M
+      ZBX_CACHESIZE: 128M
       ZBX_STARTDBSYNCERS: 4
-      ZBX_HISTORYCACHESIZE: 1024M
-      ZBX_HISTORYINDEXCACHESIZE: 256M
+      ZBX_HISTORYCACHESIZE: 128M
+      ZBX_HISTORYINDEXCACHESIZE: 128M
       ZBX_STARTBROWSERPOLLERS: 5
       ZBX_STARTLLDWORKERS: 5
       ZBX_TIMEOUT: 30
@@ -45,5 +45,7 @@ services:
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
       - /var/lib/zabbix/zabbix-proxy/enc:/var/lib/zabbix/enc
+      - /var/lib/zabbix/zabbix-proxy/mibs:/var/lib/zabbix/mibs
+      - ./my.cnf:/etc/mysql/my.cnf
     network_mode: "host"  # Usando a rede local do host
     restart: always
