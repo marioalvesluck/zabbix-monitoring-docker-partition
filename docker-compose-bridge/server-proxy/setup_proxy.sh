@@ -7,15 +7,15 @@ log() {
 
 log "Iniciando configuração do Zabbix Proxy."
 
-# Variáveis configuráveis
-PROXY_NAME="proxy-baltimore"
-DOCKER_COMPOSE_FILE="docker-compose-proxy-baltimore.yml"
+# # Variáveis configuráveis
+# PROXY_NAME="proxy-baltimore"
+# DOCKER_COMPOSE_FILE="docker-compose-proxy-baltimore.yml"
 
 #PROXY_NAME="proxy-losangeles"
 #DOCKER_COMPOSE_FILE="docker-compose-proxy-losangeles.yml"
 
-# PROXY_NAME="proxy-boston"
-# DOCKER_COMPOSE_FILE="docker-compose-proxy-boston.yml"
+PROXY_NAME="proxy-boston"
+DOCKER_COMPOSE_FILE="docker-compose-proxy-boston.yml"
 
 
 ENV_FILE="../configs/.env"
