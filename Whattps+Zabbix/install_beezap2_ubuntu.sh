@@ -2,14 +2,14 @@
 #####################################################################################################
 # Script Title:   BEEZAP2 INSTALLER                                                                 #
 # Script Descr:   Install and configure Beezap2                                                     #
-# Script Name:    beezap2.sh                                                                        #
+# Script Name:    install_beezap2_ubuntu                                                                #
 # Author:         Mário Alves                                                                       #
 # E-Mail:         marioalvesrzti@gmail.com                                                          #
 # Telegram:       @malviluckofficial                                                                #
 # Description BR: Instala e configura o Beezap2.                                                    #
 # Description EN: Installs and configures Beezap2.                                                  #
-# Help:           Execute /bin/bash beezap2.sh para informações de uso.                             #
-#                 Run /bin/bash beezap2.sh for usage information.                                   #
+# Help:           Execute /bin/bash install_beezap2_ubuntu para informações de uso.                     #
+#                 Run /bin/bash install_beezap2_ubuntu for usage information.                           #
 # Create v1.0.0:  Sun Jul 21 10:00:00 BRT 2024                                                      #
 #####################################################################################################
 
@@ -20,25 +20,26 @@ function show_help() {
     echo "################################################################################"
     echo "# Script Title:   BEEZAP2 INSTALLER                                            #"
     echo "# Script Descr:   Install and configure Beezap2                                #"
-    echo "# Script Name:    beezap2.sh                                                   #"
+    echo "# Script Name:    install_beezap2_ubuntu                                           #"
     echo "# Author:         Mário Alves                                                  #"
     echo "# E-Mail:         marioalvesrzti@gmail.com                                     #"
     echo "# Telegram:       @malviluckofficial                                           #"
     echo "# Description BR: Instala e configura o Beezap2.                               #"
     echo "# Description EN: Installs and configures Beezap2.                             #"
-    echo "# Help:           Execute /bin/bash beezap2.sh para informações de uso.        #"
-    echo "#                 Run /bin/bash beezap2.sh for usage information.              #"
+    echo "# Help:           Execute /bin/bash install_beezap2_ubuntu para informações de uso.#"
+    echo "#                 Run /bin/bash install_beezap2_ubuntu for usage information.      #"
     echo "# Create v1.0.0:  Sun Jul 21 10:00:00 BRT 2024                                 #"
     echo "################################################################################"
     echo ""
     echo "Instruções de uso:"
-    echo "  Para instalar: script.sh install"
+    echo "  Para instalar: bash install_beezap2_ubuntu install"
     echo "  Ler Qrcode: node index.js"
     echo "  Mostra grupos e IDS WhatsApp: node beeid2.js"
     echo "  Para definir o pm2 para iniciar na inicialização do sistema, use os comandos:"
     echo "  pm2 start beezap2.js --name beezap2-api"
     echo "  pm2 startup"
     echo "  pm2 save"
+        echo "  As Opçoes abaixo se Caso Precisar, gerar algum erro: "
     echo "  Acessar Servidor Zabbix server: copie arquivo para servidor zabbix server pasta /usr/lib/zabbix/alertscripts"
     echo "  beebootzap.py"
     echo "  Criar pasta em /tmp: mkdir /var/tmp/zabbix"
@@ -54,29 +55,14 @@ elif [[ "$1" != "install" ]]; then
     exit 1
 fi
 
-# Função para desabilitar o SELinux
-function disable_selinux() {
-    echo "Desabilitando o SELinux..." | tee -a $LOG_FILE
-
-    # Editar o arquivo de configuração do SELinux para desativá-lo permanentemente
-    sudo sed -i 's/^SELINUX=.*$/SELINUX=disabled/' /etc/selinux/config
-
-    # Aplicar a alteração imediatamente
-    sudo setenforce 0
-
-    echo "SELinux desabilitado. Por favor, reinicie o sistema para aplicar as alterações permanentemente." | tee -a $LOG_FILE
-}
-
-# Chamar a função para desabilitar o SELinux
-disable_selinux
-
 # Interrompe o script se qualquer comando falhar
 set -e
 
 # Variáveis para reutilização
 PROJECT_DIR="/opt/beezap2"
+ALERT_SCRITPS_ZABIX="/usr/lib/zabbix/alertscripts"
 UPLOAD_DIR="${PROJECT_DIR}/uploads/bee"
-CHROME_PKG="google-chrome-stable_current_x86_64.rpm"
+CHROME_PKG="google-chrome-stable_current_amd64.deb"
 NVM_INSTALL_SCRIPT="https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh"
 
 # Função para obter a hora atual
@@ -93,16 +79,9 @@ echo "Início da instalação: $(get_time)" | tee -a $LOG_FILE
 
 # Atualizar e instalar pacotes necessários para o projeto
 echo "Atualizando sistema e instalando pacotes necessários..." | tee -a $LOG_FILE
-yum update -y && yum upgrade -y && yum install -y \
-    nano vim curl epel-release wget unzip fontconfig xdg-utils git tar
+apt update && apt upgrade -y && apt install -y \
+    nano vim curl wget unzip fontconfig xdg-utils git tar
 echo "Pacotes necessários instalados."
-
-#Liberando Portas do Firewall
-echo "Iniciando Liberação da Porta..." | tee -a $LOG_FILE
-firewall-cmd --zone=public --add-port=4000/tcp --permanent
-firewall-cmd --reload
-firewall-cmd --list-ports
-echo "Porta Liberada com Sucesso"
 
 # Criar estrutura do projeto
 echo "Criando estrutura do projeto..." | tee -a $LOG_FILE
@@ -112,9 +91,12 @@ echo "Estrutura do projeto criada." | tee -a $LOG_FILE
 
 # Instalar pacote google-chrome
 echo "Instalando Google Chrome..." | tee -a $LOG_FILE
-wget https://dl.google.com/linux/direct/${CHROME_PKG}
-yum localinstall -y ${CHROME_PKG}
-rm ${CHROME_PKG}
+
+#wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+cp /opt/Whattapp_Zabbix/google-chrome-stable_current_amd64.deb ${PROJECT_DIR}
+apt install -y ./google-chrome-stable_current_amd64.deb
+dpkg -i ./google-chrome-stable_current_amd64.deb
+#rm google-chrome-stable_current_amd64.deb
 echo "Google Chrome instalado." | tee -a $LOG_FILE
 
 # Instalar NVM
@@ -173,15 +155,15 @@ n latest
 echo "Dependências npm instaladas." | tee -a $LOG_FILE
 
 # Realizar sed no arquivo package.json
-echo "Atualizando whatsapp-web.js no package.json..."
-sed -i 's/"whatsapp-web.js": "^1.26.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
-echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
+#echo "Atualizando whatsapp-web.js no package.json..."
+#sed -i 's/"whatsapp-web.js": "^1.26.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
+#echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
 
 # Realizar update e instalação do whatsapp-web.js#webpack-exodus
 echo "Atualizando e instalando whatsapp-web.js#webpack-exodus..." | tee -a $LOG_FILE
 npm update whatsapp-web.js
-npm install github:pedroslopez/whatsapp-web.js#webpack-exodus
-echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
+#npm install github:pedroslopez/whatsapp-web.js#webpack-exodus
+#echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
 
 # Criar e escrever no arquivo index.js
 echo "Criando index.js..." | tee -a $LOG_FILE
@@ -434,19 +416,11 @@ EOF
 echo "beezap2.js criado." | tee -a $LOG_FILE
 
 # Iniciando Projeto e Parando PM2
-echo " Iniciando Projeto Beezap2 Rodando Comandos Abaixo..."
-echo " Acesse Pasta /opt/beezap2"
-echo " npm install -g pm2 n"
-echo " pm2 start beezap2.js --name beezap2-api"
-echo " pm2 stop beezap2.js --name beezap2-api"
-echo " pm2 save"
-
-# Acessando pasta do Projeto
-#cd ${PROJECT_DIR}
-#echo "${PROJECT_DIR}"
-#echo "Reinstalando PM2"
-#npm install -g pm2 n
-#echo "Instalado com Sucesso"
+echo "Iniciando Projeto Beezap2 Rodando Comandos Abaixo..."
+echo "pm2 start ${PROJECT_DIR}/beezap2.js --name beezap2-api"
+echo "pm2 statup ${PROJECT_DIR}/beezap2.js --name beezap2-api"
+echo "pm2 stop ${PROJECT_DIR}/beezap2.js --name beezap2-api"
+echo "pm2 save"
 
 # Finalizar tempo de instalação
 end_time=$(date +%s)

@@ -45,10 +45,10 @@ log "Zabbix Server PSK salvo em: $SERVER_PSK_FILE"
 
 # Construindo imagens personalizadas e inicializando o docker-compose
 log "Construindo imagens Docker personalizadas..."
-docker-compose build
+docker-compose --env-file ../../configs/.env  build
 
 log "Iniciando containers Docker..."
-docker-compose up -d
+docker-compose --env-file ../../configs/.env up -d
 
 log "Containers Docker iniciados com sucesso."
 

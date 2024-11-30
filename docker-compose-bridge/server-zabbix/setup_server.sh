@@ -24,10 +24,10 @@ chmod 775 "$SERVER_PSK_FILE"
 
 # Construindo e iniciando o contêiner do Zabbix Server
 log "Construindo imagem Docker do Zabbix Server..."
-docker-compose --env-file ../configs/.env -f docker-compose-server.yml build
+docker-compose --env-file ../../configs/.env -f docker-compose-server.yml build
 
 log "Iniciando contêiner do Zabbix Server..."
-docker-compose --env-file ../configs/.env -f docker-compose-server.yml up -d
+docker-compose --env-file ../../configs/.env -f docker-compose-server.yml up -d
 
 
 
