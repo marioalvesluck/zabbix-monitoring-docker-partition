@@ -1,0 +1,74 @@
+
+services:
+  zabbix-agent-server:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-server
+    environment:
+      ZBX_SERVER_HOST: "zabbix-server"
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-server-agent"
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.10
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.2"
+    restart: always
+
+  zabbix-agent-db:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-db
+    environment:
+      ZBX_SERVER_HOST: "zabbix-server"
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-db-agent"
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.6
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.2"
+    restart: always
+
+  zabbix-agent-web:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-web
+    environment:
+      ZBX_SERVER_HOST: "zabbix-server"
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-web-agent"
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.11
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.2"
+    restart: always
+
+  zabbix-agent-proxy:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-proxy
+    environment:
+      ZBX_SERVER_HOST: "zabbix-server"
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-proxy-agent"
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.12
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.2"
+    restart: always
+
+networks:
+  zabbix-net:
+    name: zabbix_zabbix-net
+

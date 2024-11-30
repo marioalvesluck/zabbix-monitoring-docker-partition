@@ -2,7 +2,7 @@ services:
   zabbix-db:
     build:
       context: .
-      dockerfile: Dockerfile.zabbix-partition
+      dockerfile: Dockerfile.mysql-partition
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
@@ -17,7 +17,6 @@ services:
     volumes:
       - /var/lib/zabbix/mysql:/var/lib/mysql
       - ./part.sql:/docker-entrypoint-initdb.d/part.sql
-      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
     ports:
@@ -25,6 +24,14 @@ services:
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.5
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: "2.0"
+        reservations:
+          memory: 2G
+          cpus: "1.5"
     restart: always
 
   zabbix-server:
@@ -37,15 +44,16 @@ services:
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      ZBX_ALLOWUNSUPPORTEDDBVERSIONS: 1
       ZBX_DEBUGLEVEL: 3
       ZBX_STARTPINGERS: 10
-      ZBX_STARTPOLLERPROCESSES: 10
-      ZBX_STARTDBSYNCERS: 8
+      ZBX_STARTPOLLERPROCESSES: 20
+      ZBX_STARTDBSYNCERS: 4
       ZBX_STARTREPORTWRITERS: 5
-      ZBX_CACHESIZE: 512M
+      ZBX_CACHESIZE: 1G
       ZBX_HISTORYCACHESIZE: 512M
-      ZBX_HISTORYINDEXCACHESIZE: 512M
-      ZBX_TRENDCACHESIZE: 256M
+      ZBX_HISTORYINDEXCACHESIZE: 256M
+      ZBX_TRENDCACHESIZE: 512M
       ZBX_VALUECACHESIZE: 256M
       ZBX_TIMEOUT: 30
       ZBX_UNREACHABLEPERIOD: 300
@@ -61,16 +69,26 @@ services:
       ZBX_TLSACCEPT: psk
       ZBX_TLSPSKIDENTITY: "${ZBX_SRV_PRIMARY_TLSPSKIDENTITY}"
       ZBX_TLSPSKFILE: /var/lib/zabbix/zabbix-server/enc/zabbix_server.psk
+      ZBX_ALERTSCRIPTPATH: "/usr/lib/zabbix/alertscripts"
+      ZBX_EXTERNALSCRIPTPATH: "/usr/lib/zabbix/externalscripts"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /var/lib/zabbix/mysql:/var/lib/mysql
       - /var/lib/zabbix/zabbix-server/enc:/var/lib/zabbix/zabbix-server/enc
-      - ./my.cnf:/etc/mysql/my.cnf
+      - /var/lib/zabbix/zabbix-server/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - /var/lib/zabbix/zabbix-server/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
     ports:
       - "10051:10051"
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.8
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.5"
+        reservations:
+          memory: 1G
+          cpus: "1.0"
     restart: always
 
   zabbix-web:
@@ -91,9 +109,17 @@ services:
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.9
-    restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
+          cpus: "0.3"
+    restart: always
 
   zabbix-proxy:
     build:
@@ -106,106 +132,32 @@ services:
       ZBX_SERVER_PORT: 10051
       ZBX_HOSTNAME: "${ZBX_PROXY_HOSTNAME}"
       ZBX_DEBUGLEVEL: 3
-      ZBX_ENABLEREMOTECOMMANDS: 1
-      ZBX_PROXYLOCALBUFFER: 2
-      ZBX_PROXYOFFLINEBUFFER: 6
-      ZBX_PROXYHEARTBEATFREQUENCY: 10
-      ZBX_CONFIGFREQUENCY: 10
-      ZBX_DATASENDERFREQUENCY: 1
-      ZBX_STARTHISTORYPOLLERS: 5
-      ZBX_STARTPOLLERS: 30
-      ZBX_STARTPREPROCESSORS: 5
-      ZBX_STARTPOLLERSUNREACHABLE: 10
-      ZBX_STARTPINGERS: 5
-      ZBX_STARTDISCOVERERS: 5
-      ZBX_STARTHTTPPOLLERS: 5
-      ZBX_HOUSEKEEPINGFREQUENCY: 1
-      ZBX_STARTVMWARECOLLECTORS: 1
-      ZBX_CACHESIZE: 1024M
-      ZBX_STARTDBSYNCERS: 4
-      ZBX_HISTORYCACHESIZE: 1024M
-      ZBX_HISTORYINDEXCACHESIZE: 256M
-      ZBX_STARTBROWSERPOLLERS: 5
-      ZBX_STARTLLDWORKERS: 5
+      ZBX_CACHESIZE: 512M
+      ZBX_STARTPOLLERS: 10
       ZBX_TIMEOUT: 30
-      ZBX_UNREACHABLEPERIOD: 20
-      ZBX_UNAVAILABLEDELAY: 20
-      ZBX_UNREACHABLEDELAY: 20
-      ZBX_LOGSLOWQUERIES: 3000
       ZBX_TLSCONNECT: psk
       ZBX_TLSACCEPT: psk
       ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_TLSPSKIDENTITY}"
-      ZBX_TLSPSKFILE: zabbix_proxy.psk
+      ZBX_TLSPSKFILE: /var/lib/zabbix/enc/zabbix_proxy.psk
+      ZBX_ALERTSCRIPTPATH: "/usr/lib/zabbix/alertscripts"
+      ZBX_EXTERNALSCRIPTPATH: "/usr/lib/zabbix/externalscripts"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
       - /var/lib/zabbix/zabbix-proxy/enc:/var/lib/zabbix/enc
       - /var/lib/zabbix/zabbix-proxy/mibs:/var/lib/zabbix/mibs
-      - ./my.cnf:/etc/mysql/my.cnf
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.13
-    restart: always
-
-  zabbix-agent-server:
-    build:
-      context: .
-      dockerfile: Dockerfile.zabbix-agent
-    container_name: zabbix-agent-server
-    environment:
-      ZBX_HOSTNAME: "${ZBX_SERVER_HOST}"
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
-    depends_on:
-      - zabbix-server
-    networks:
-      zabbix-net:
-        ipv4_address: 172.18.0.10
-    restart: always
-
-  zabbix-agent-db:
-    build:
-      context: .
-      dockerfile: Dockerfile.zabbix-agent
-    container_name: zabbix-agent-db
-    environment:
-      ZBX_HOSTNAME: "zabbix-db"
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
-    depends_on:
-      - zabbix-server
-    networks:
-      zabbix-net:
-        ipv4_address: 172.18.0.11
-    restart: always
-
-  zabbix-agent-web:
-    build:
-      context: .
-      dockerfile: Dockerfile.zabbix-agent
-    container_name: zabbix-agent-web
-    environment:
-      ZBX_HOSTNAME: "zabbix-web"
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
-    depends_on:
-      - zabbix-server
-    networks:
-      zabbix-net:
-        ipv4_address: 172.18.0.12
-    restart: always
-
-  zabbix-agent-proxy:
-    build:
-      context: .
-      dockerfile: Dockerfile.zabbix-agent
-    container_name: zabbix-agent-proxy
-    environment:
-      ZBX_HOSTNAME: "${ZBX_PROXY_HOSTNAME}"
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
-    depends_on:
-      - zabbix-proxy
-    networks:
-      zabbix-net:
-        ipv4_address: 172.18.0.14
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
+          cpus: "0.3"
     restart: always
 
 networks:

@@ -1,4 +1,3 @@
-# Dockerfile.zabbix-server
 FROM zabbix/zabbix-server-mysql:ubuntu-latest
 
 USER root
@@ -7,15 +6,18 @@ USER root
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Instalar pacotes adicionais
-RUN mkdir -p /var/lib/apt/lists/partial && \
-    chmod -R 755 /var/lib/apt/lists && \
-    apt-get update && \
-    apt-get install -y nano vim htop snmp-mibs-downloader \
-                       unixodbc unixodbc-dev && \
+# Instalar pacotes adicionais (exemplo)
+RUN apt-get update && apt-get install -y \
+    nano \
+    vim \
+    python3 \
+    python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-# Copiar o arquivo de configuração my.cnf para o contêiner
-COPY my.cnf /etc/mysql/my.cnf
+# Criar a pasta e ajustar permissões
+RUN mkdir -p /var/tmp/zabbix && \
+    chown -R zabbix:zabbix /var/tmp/zabbix
 
+# Alternar para o usuário zabbix
 USER zabbix
+

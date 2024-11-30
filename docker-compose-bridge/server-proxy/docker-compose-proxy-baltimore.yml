@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.zabbix-proxy
-    container_name: zabbix-proxy-baltimore
+    container_name: "${ZBX_PROXY_BALTIMORE_HOSTNAME}"
     environment:
       ZBX_PROXYMODE: 0
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"

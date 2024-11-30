@@ -6,7 +6,7 @@ services:
     container_name: zabbix-proxy-boston
     environment:
       ZBX_PROXYMODE: 0
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+      ZBX_SERVER_HOST: "${ZBX_PROXY_BOSTON_HOSTNAME}"
       ZBX_SERVER_PORT: 10051
       ZBX_HOSTNAME: "${ZBX_PROXY_BOSTON_HOSTNAME}"
       ZBX_DEBUGLEVEL: 3
