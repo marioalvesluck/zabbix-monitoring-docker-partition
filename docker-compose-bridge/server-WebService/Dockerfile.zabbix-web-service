@@ -1,0 +1,28 @@
+# Base na imagem oficial do Zabbix Web Service com Ubuntu
+FROM zabbix/zabbix-web-service:ubuntu-latest
+
+USER root
+
+# Configurar o fuso horário
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Instalar pacotes adicionais
+RUN apt-get update && apt-get install -y \
+    nano \
+    vim \
+    htop \
+    python3 \
+    python3-pip \
+    wget \
+    gnupg \
+    apt-transport-https \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Baixar e instalar Google Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install ./google-chrome-stable_current_amd64.deb || apt-get install -f -y && \
+    rm -f google-chrome-stable_current_amd64.deb
+
+USER zabbix

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variáveis de Configuração
-ZABBIX_VERSION=7.0
-POSTGRESQL_VERSION=13
+ZABBIX_VERSION=7.2
+POSTGRESQL_VERSION=16
 DATABASE_PASSWORD="zabbix"
 PRODUCT_VERSION=$(rpm -E %{rhel})
 
@@ -17,9 +17,7 @@ log() {
 }
 
 # Início do Script
-log "###############################################################"
 log " INICIO DA INSTALAÇÃO DO ZABBIX NO SISTEMA RHEL-LIKE"
-log "###############################################################"
 
 # Desabilita SELinux
 log "Desabilitando SELinux..."
@@ -57,13 +55,18 @@ log "Criando usuário e banco de dados para o Zabbix..."
 sudo -u postgres psql -c "CREATE USER zabbix WITH ENCRYPTED PASSWORD '$DATABASE_PASSWORD'" 2>/dev/null
 sudo -u postgres createdb -O zabbix -E Unicode -T template0 zabbix 2>/dev/null
 
-# Instalação e Configuração do Zabbix Server
+# Instalação e Configuração do Zabbix Server # versao 6
 log "Instalando repositório Zabbix..."
-rpm -Uvh https://repo.zabbix.com/zabbix/$ZABBIX_VERSION/rhel/$PRODUCT_VERSION/x86_64/zabbix-release-$ZABBIX_VERSION-4.el$PRODUCT_VERSION.noarch.rpm
+#rpm -Uvh https://repo.zabbix.com/zabbix/$ZABBIX_VERSION/rhel/$PRODUCT_VERSION/x86_64/zabbix-release-$ZABBIX_VERSION-4.el$PRODUCT_VERSION.noarch.rpm
+# instalacao versao 7
+rpm -Uvh https://repo.zabbix.com/zabbix/$ZABBIX_VERSION/release/rhel/$PRODUCT_VERSION/noarch/zabbix-release-latest-$ZABBIX_VERSION.el9.noarch.rpm 
 dnf -y install zabbix-server-pgsql zabbix-sql-scripts
 
-log "Configurando schema do banco de dados Zabbix..."
-zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix PGPASSWORD=$DATABASE_PASSWORD psql -hlocalhost -Uzabbix zabbix 2>/dev/null
+log "Configurando schema do banco de dados Zabbix V7..."
+zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz| sudo -u zabbix PGPASSWORD=$DATABASE_PASSWORD psql -hlocalhost -Uzabbix zabbix 2>/dev/null
+
+#log "Configurando schema do banco de dados Zabbix V6..."
+#zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix PGPASSWORD=$DATABASE_PASSWORD psql -hlocalhost -Uzabbix zabbix 2>/dev/null
 
 log "Configurando o Zabbix Server..."
 sudo sed -i "s/# DBHost=localhost/DBHost=localhost/" /etc/zabbix/zabbix_server.conf
@@ -125,8 +128,7 @@ systemctl restart nginx
 # Tempo total de execução e resumo
 END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
-log "###############################################################"
 log " INSTALAÇÃO COMPLETA DO ZABBIX"
 log " TEMPO TOTAL: $((TOTAL_TIME / 60)) minutos e $((TOTAL_TIME % 60)) segundos."
 log " Logs detalhados disponíveis em: $LOG_FILE"
-log "###############################################################"
+

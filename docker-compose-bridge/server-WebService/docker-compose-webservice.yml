@@ -1,0 +1,25 @@
+services:
+  zabbix-web-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.zabbix-web-service  # Dockerfile customizado
+    container_name: zabbix-web-service
+    environment:
+      ZBX_ALLOWEDIP: 192.168.0.0/24          # Rede permitida para comunicação
+      ZBX_TIMEOUT: 30                        # Timeout para relatórios
+      ZBX_STARTREPORTWRITERS: 2              # Número de escritores de relatório
+    ports:
+      - "${ZBX_FRONT_HOST}:10053:10053"      # Porta vinculada ao IP específico
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - ./web_service.conf:/etc/zabbix/web_service.conf:ro  # Configuração personalizada
+    deploy:
+      resources:
+        limits:
+          memory: 1G                         # Limite máximo de memória
+          cpus: "1.0"                        # Limite máximo de CPU
+        reservations:
+          memory: 512M                       # Memória reservada
+          cpus: "1.0"                        # CPU reservada
+    restart: always                          # Reiniciar automaticamente em caso de falha
