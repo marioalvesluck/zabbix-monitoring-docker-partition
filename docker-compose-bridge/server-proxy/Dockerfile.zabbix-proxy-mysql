@@ -1,5 +1,5 @@
 # Dockerfile.zabbix-proxy
-FROM zabbix/zabbix-proxy-sqlite3:ubuntu-7.0-latest
+FROM zabbix/zabbix-proxy-mysql:ubuntu-7.0-latest
 
 USER root
 

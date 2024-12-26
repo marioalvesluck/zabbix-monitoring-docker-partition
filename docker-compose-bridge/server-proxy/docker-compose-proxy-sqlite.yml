@@ -1,0 +1,58 @@
+services:
+  zabbix-proxy:
+    build:
+      context: .  # Diretório atual, onde está o Dockerfile.zabbix-proxy-sqlite3
+      dockerfile: Dockerfile.zabbix-proxy-sqlite3
+    container_name: zabbix-proxy-boston
+    environment:
+      ZBX_PROXYMODE: 0                          # 0 para modo ativo, 1 para modo passivo
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"     # IP ou hostname do servidor Zabbix
+      ZBX_SERVER_PORT: 10051                    # Porta do servidor Zabbix
+      ZBX_HOSTNAME: "${ZBX_PROXY_SQLITE_HOSTNAME}" # Nome do proxy
+      ZBX_DEBUGLEVEL: 3                         # Nível de debug (1-5)
+      ZBX_ENABLEREMOTECOMMANDS: 1               # Habilitar comandos remotos
+      ZBX_PROXYLOCALBUFFER: 2                   # Tamanho do buffer local em horas
+      ZBX_PROXYOFFLINEBUFFER: 6                 # Tamanho do buffer offline em horas
+      ZBX_PROXYHEARTBEATFREQUENCY: 10           # Frequência de heartbeat (segundos)
+      ZBX_CONFIGFREQUENCY: 10                   # Frequência para atualizar a configuração (segundos)
+      ZBX_DATASENDERFREQUENCY: 1                # Frequência de envio de dados ao servidor (segundos)
+      ZBX_STARTHISTORYPOLLERS: 5                # Número de history pollers
+      ZBX_STARTPOLLERS: 10                      # Número de pollers
+      ZBX_STARTPREPROCESSORS: 5                 # Número de preprocessadores
+      ZBX_STARTPOLLERSUNREACHABLE: 10           # Pollers para hosts inatingíveis
+      ZBX_STARTPINGERS: 5                       # Número de ping pollers
+      ZBX_STARTDISCOVERERS: 5                   # Discoverers
+      ZBX_STARTHTTPPOLLERS: 5                   # HTTP pollers
+      ZBX_STARTODBCPOLLERS: 5                   # ODBC pollers
+      ZBX_HOUSEKEEPINGFREQUENCY: 1              # Frequência de limpeza (horas)
+      ZBX_STARTVMWARECOLLECTORS: 1              # VMware collectors
+      ZBX_CACHESIZE: 128M                       # Cache size
+      ZBX_STARTDBSYNCERS: 4                     # Database syncers
+      ZBX_HISTORYCACHESIZE: 128M                # History cache
+      ZBX_HISTORYINDEXCACHESIZE: 128M           # Index cache
+      ZBX_WEBDRIVERURL: "http://${ZBX_WEBDRIVE_HOST:-127.0.0.1}:4444"  # URL do WebDriver
+      ZBX_STARTBROWSERPOLLERS: 5                # Browser pollers
+      ZBX_STARTLLDWORKERS: 5                    # Low-level discovery workers
+      ZBX_TIMEOUT: 30                           # Timeout geral
+      ZBX_UNREACHABLEPERIOD: 20                 # Período para hosts inatingíveis
+      ZBX_UNAVAILABLEDELAY: 20                  # Atraso para hosts indisponíveis
+      ZBX_UNREACHABLEDELAY: 20                  # Atraso para hosts inatingíveis
+      ZBX_LOGSLOWQUERIES: 3000                  # Log de queries lentas (ms)
+      ZBX_TLSCONNECT: psk                       # Conexão TLS (PSK)
+      ZBX_TLSACCEPT: psk                        # Aceitar conexões TLS (PSK)
+      ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_SQLITE_TLSPSKIDENTITY}"  # Identidade PSK
+      ZBX_TLSPSKFILE: "/var/lib/zabbix/enc/${ZBX_PROXY_SQLITE_TLSPSKIDENTITY}.psk"  # Arquivo PSK
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+      - /var/lib/zabbix/zabbix-proxy/enc:/var/lib/zabbix/enc
+      - /var/lib/zabbix/zabbix-proxy/mibs:/var/lib/zabbix/mibs
+      - ./my.cnf:/etc/mysql/my.cnf  # Configuração personalizada do MySQL
+    network_mode: host               # Compartilhar a rede do host para melhor desempenho
+    restart: unless-stopped          # Reiniciar apenas em caso de falhas
+    logging:
+      driver: json-file              # Configuração de logs
+      options:
+        max-size: "10m"              # Limite de tamanho por arquivo de log
+        max-file: "5"                # Manter até 5 arquivos de log

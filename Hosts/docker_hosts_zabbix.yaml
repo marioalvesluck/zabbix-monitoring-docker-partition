@@ -4,31 +4,78 @@ zabbix_export:
     - uuid: 6f6799aa69e844b4b3918f779f2abf08
       name: 'Zabbix servers'
   hosts:
-    - host: zabbix-db
-      name: zabbix-db
+    - host: zabbix-db-agent
+      name: zabbix-db-agent
       templates:
         - name: 'Linux by Zabbix agent active'
+        - name: 'Template Module ICMP Ping'
       groups:
         - name: 'Zabbix servers'
       interfaces:
-        - ip: 172.18.0.11
+        - ip: 172.18.0.6
           interface_ref: if1
+      macros:
+        - macro: '{$MYSQL.DSN}'
+          value: MYSQL
+          description: 'System data source name.'
+        - macro: '{$MYSQL.PASSWORD}'
+          value: Serverzabbix!
+          description: 'MySQL user password.'
+        - macro: '{$MYSQL.USER}'
+          value: zabbix
+          description: 'MySQL username.'
+        - macro: '{$ODC}'
+          value: zabbix
       inventory_mode: DISABLED
     - host: zabbix-proxy
       name: zabbix-proxy
       templates:
         - name: 'Linux by Zabbix agent'
+        - name: 'Template Module ICMP Ping'
         - name: 'Zabbix proxy health'
       groups:
         - name: 'Zabbix servers'
       interfaces:
-        - ip: 172.18.0.14
+        - ip: 172.18.0.12
           interface_ref: if1
       inventory_mode: DISABLED
     - host: zabbix-server
       name: zabbix-server
       templates:
         - name: 'Linux by Zabbix agent'
+        - name: 'Template Module ICMP Ping'
+        - name: 'Zabbix server health'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.10
+          interface_ref: if1
+      macros:
+        - macro: '{$PROXY.LAST_SEEN.MAX}'
+          value: '1200'
+          description: 'The maximum number of seconds that Zabbix proxy has not been seen.'
+      inventory:
+        name: 3d1e25c1d6fa
+        os: 'Linux version 5.15.0-302.167.6.1.el9uek.x86_64 (mockbuild@host-100-100-224-34) (gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-2.0.1)'
+        location_lat: '56.95387'
+        location_lon: '24.22067'
+      inventory_mode: AUTOMATIC
+    - host: zabbix-web-agent
+      name: zabbix-web-agent
+      templates:
+        - name: 'Linux by Zabbix agent active'
+        - name: 'Template Module ICMP Ping'
+      groups:
+        - name: 'Zabbix servers'
+      interfaces:
+        - ip: 172.18.0.11
+          interface_ref: if1
+      inventory_mode: DISABLED
+    - host: zbx-server
+      name: zbx-server
+      templates:
+        - name: 'Linux by Zabbix agent'
+        - name: 'Template Module ICMP Ping'
         - name: 'Zabbix server health'
       groups:
         - name: 'Zabbix servers'
@@ -36,18 +83,8 @@ zabbix_export:
         - ip: 172.18.0.10
           interface_ref: if1
       inventory:
-        name: 9e8f5f8dc4c0
-        os: 'Linux version 5.15.0-302.167.6.el9uek.x86_64 (mockbuild@host-100-100-224-5) (gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3.0.1), G'
+        name: 3d1e25c1d6fa
+        os: 'Linux version 5.15.0-302.167.6.1.el9uek.x86_64 (mockbuild@host-100-100-224-34) (gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-2.0.1)'
         location_lat: '56.95387'
         location_lon: '24.22067'
       inventory_mode: AUTOMATIC
-    - host: zabbix-web
-      name: zabbix-web
-      templates:
-        - name: 'Linux by Zabbix agent active'
-      groups:
-        - name: 'Zabbix servers'
-      interfaces:
-        - ip: 172.18.0.12
-          interface_ref: if1
-      inventory_mode: DISABLED

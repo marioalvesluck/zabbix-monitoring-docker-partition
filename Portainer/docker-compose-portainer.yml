@@ -13,6 +13,8 @@ services:
       - portainer_data:/data
     networks:
       - portainer_net
+    mem_limit: 1G
+    cpus: "2.0"
 
 networks:
   portainer_net:
@@ -20,4 +22,3 @@ networks:
 
 volumes:
   portainer_data:
-

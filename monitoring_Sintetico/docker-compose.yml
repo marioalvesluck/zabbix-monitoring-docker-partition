@@ -7,6 +7,7 @@ services:
       - "${EVENT_BUS_PORT_1}:4442"
       - "${EVENT_BUS_PORT_2}:4443"
       - "5557:5557"
+    mem_limit: 128m  # Limita o consumo total de memória para o Event Bus
 
   selenium-sessions:
     image: selenium/sessions:${SELENIUM_VERSION}
@@ -20,6 +21,7 @@ services:
       - SE_EVENT_BUS_HOST=selenium-event-bus
       - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
       - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+    mem_limit: 128m  # Limita o consumo total de memória para Sessions
 
   selenium-session-queue:
     image: selenium/session-queue:${SELENIUM_VERSION}
@@ -27,6 +29,7 @@ services:
     restart: always
     ports:
       - "${SESSION_QUEUE_PORT}:5559"
+    mem_limit: 128m  # Limita o consumo total de memória para Session Queue
 
   selenium-distributor:
     image: selenium/distributor:${SELENIUM_VERSION}
@@ -46,6 +49,7 @@ services:
       - SE_SESSIONS_MAP_PORT=${SESSIONS_PORT}
       - SE_SESSION_QUEUE_HOST=selenium-session-queue
       - SE_SESSION_QUEUE_PORT=${SESSION_QUEUE_PORT}
+    mem_limit: 128m  # Limita o consumo total de memória para o Distributor
 
   selenium-router:
     image: selenium/router:${SELENIUM_VERSION}
@@ -64,10 +68,11 @@ services:
       - SE_SESSIONS_MAP_PORT=${SESSIONS_PORT}
       - SE_SESSION_QUEUE_HOST=selenium-session-queue
       - SE_SESSION_QUEUE_PORT=${SESSION_QUEUE_PORT}
+    mem_limit: 128m  # Limita o consumo total de memória para o Router
 
   chrome:
     image: selenium/node-chrome:${SELENIUM_VERSION}
-    shm_size: ${SHM_SIZE}
+    shm_size: 2gb  # Memória compartilhada para o navegador
     restart: always
     depends_on:
       - selenium-event-bus
@@ -75,10 +80,13 @@ services:
       - SE_EVENT_BUS_HOST=selenium-event-bus
       - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
       - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+      - SE_NODE_MAX_SESSIONS=1  # Limita a 1 sessão por navegador
+      - SE_NODE_HEADLESS=true  # Modo headless para reduzir consumo
+    mem_limit: 512m  # Limita o consumo total de memória para o Chrome
 
   edge:
     image: selenium/node-edge:${SELENIUM_VERSION}
-    shm_size: ${SHM_SIZE}
+    shm_size: 2gb  # Memória compartilhada para o navegador
     restart: always
     depends_on:
       - selenium-event-bus
@@ -86,10 +94,13 @@ services:
       - SE_EVENT_BUS_HOST=selenium-event-bus
       - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
       - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+      - SE_NODE_MAX_SESSIONS=1  # Limita a 1 sessão por navegador
+      - SE_NODE_HEADLESS=true  # Modo headless para reduzir consumo
+    mem_limit: 512m  # Limita o consumo total de memória para o Edge
 
   firefox:
     image: selenium/node-firefox:${SELENIUM_VERSION}
-    shm_size: ${SHM_SIZE}
+    shm_size: 2gb  # Memória compartilhada para o navegador
     restart: always
     depends_on:
       - selenium-event-bus
@@ -97,3 +108,6 @@ services:
       - SE_EVENT_BUS_HOST=selenium-event-bus
       - SE_EVENT_BUS_PUBLISH_PORT=${EVENT_BUS_PORT_1}
       - SE_EVENT_BUS_SUBSCRIBE_PORT=${EVENT_BUS_PORT_2}
+      - SE_NODE_MAX_SESSIONS=1  # Limita a 1 sessão por navegador
+      - SE_NODE_HEADLESS=true  # Modo headless para reduzir consumo
+    mem_limit: 512m  # Limita o consumo total de memória para o Firefox

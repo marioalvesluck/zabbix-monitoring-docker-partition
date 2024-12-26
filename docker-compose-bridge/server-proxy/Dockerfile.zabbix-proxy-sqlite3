@@ -1,5 +1,5 @@
 # Dockerfile.zabbix-proxy
-FROM zabbix/zabbix-proxy-sqlite3:ubuntu-latest
+FROM zabbix/zabbix-proxy-sqlite3:ubuntu-7.0-latest
 
 USER root
 
@@ -15,6 +15,17 @@ RUN mkdir -p /var/lib/apt/lists/partial && \
                        unixodbc unixodbc-dev odbc-mariadb && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y libevent-2.1-7 libevent-dev && rm -rf /var/lib/apt/lists/*
+
+
+# Adicionar pacotes necessários para o driver MS ODBC
+RUN apt-get update && apt-get install -y sudo lsb-release && \
+    apt-get update && apt-get install -y curl apt-transport-https gnupg && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg && \
+    curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | tee /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 && \
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bash.bashrc
+
 # Copiar os arquivos de configuração ODBC
 COPY libmyodbc8a.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8a.so
 COPY libmyodbc8w.so /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so
@@ -24,8 +35,5 @@ COPY odbc.ini /etc/odbc.ini
 # Definir permissões e proprietário para os drivers
 RUN chmod 644 /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8*.so && \
     chown root:root /usr/lib/x86_64-linux-gnu/odbc/libmyodbc8*.so
-
-# Copiar o arquivo de configuração my.cnf para o contêiner
-COPY my.cnf /etc/mysql/my.cnf
 
 USER zabbix
