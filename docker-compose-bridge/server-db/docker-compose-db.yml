@@ -1,8 +1,9 @@
 services:
   zabbix-db:
+    container_name: zabbix-db  # Nome fixo para o container
     build:
       context: .
-      dockerfile: Dockerfile.mysql
+      dockerfile: Dockerfile.zabbix-partition
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
