@@ -15,6 +15,6 @@ log "Construindo imagem Docker para $DB_COMPOSE..."
 docker-compose --env-file ../../configs/.env -f "$DB_COMPOSE" build
 
 log "Iniciando contêiner Docker para $DB_COMPOSE..."
-docker-compose --env-file .../../configs/.env -f "$DB_COMPOSE" up -d
+docker-compose --env-file ../../configs/.env -f "$DB_COMPOSE" up -d
 
 log "Configuração do banco de dados concluída."

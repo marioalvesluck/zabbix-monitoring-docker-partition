@@ -1,6 +1,6 @@
 services:
   zabbix-db:
-    container_name: zabbix-db  # Nome fixo para o container
+    container_name: zabbix-db
     build:
       context: .
       dockerfile: Dockerfile.zabbix-partition
@@ -17,15 +17,23 @@ services:
     ]
     volumes:
       - /var/lib/zabbix/mysql:/var/lib/mysql
-      - ./part.sql:/docker-entrypoint-initdb.d/part.sql  # Mantido para particionamento
-      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql  # Novo arquivo para criar usuários
+      - ./part.sql:/docker-entrypoint-initdb.d/part.sql
+      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
-      - /var/log/mysql:/var/log/mysql  # Logs do MySQL
-    network_mode: "host"  # Utilizando a rede local do host
+      - /var/log/mysql:/var/log/mysql
+    ports:
+      - "3306:3306"  # Mapeamento explícito
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: "2.0"
+        reservations:
+          memory: 2G

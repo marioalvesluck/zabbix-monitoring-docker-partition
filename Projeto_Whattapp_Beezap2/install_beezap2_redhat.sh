@@ -229,9 +229,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        args: ['--no-sandbox'],
-        headless: true, // Certifique-se de que o navegador está rodando em modo headless
-        timeout: 60000 // Aumentar o timeout para 60 segundos
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
@@ -239,25 +238,43 @@ client.on('ready', async () => {
     console.log('Cliente está pronto!');
 
     try {
-        console.time('Obter chats'); // Início do timer para obter chats
+        // Adicionar tempo para carregamento completo dos chats
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        // Obter lista de chats
         const chats = await client.getChats();
-        console.timeEnd('Obter chats'); // Fim do timer para obter chats
 
-        console.time('Filtrar grupos'); // Início do timer para filtrar grupos
+        console.log('Total de chats:', chats.length);
+
+        // Verificar propriedades de cada chat
+        chats.forEach(chat => {
+            console.log(`Chat: ${chat.name || 'Sem nome'} | ID: ${chat.id?._serialized || 'Sem ID'} | É grupo: ${chat.isGroup || false}`);
+        });
+
+        // Filtrar apenas grupos
         const groupChats = chats.filter(chat => chat.isGroup);
-        console.timeEnd('Filtrar grupos'); // Fim do timer para filtrar grupos
 
-        console.time('Obter informações dos grupos'); // Início do timer para obter informações dos grupos
-        const groupInfo = groupChats.map(chat => ({ id: chat.id._serialized, name: chat.name }));
-        console.timeEnd('Obter informações dos grupos'); // Fim do timer para obter informações dos grupos
+        // Obter IDs e nomes de grupos
+        const groupInfo = groupChats.map(chat => ({
+            id: chat.id._serialized,
+            name: chat.name
+        }));
 
         console.log('Lista de IDs e nomes de grupos:', groupInfo);
     } catch (error) {
-        console.error('Erro ao obter a lista de IDs e nomes de grupos:', error);
+        console.error('Erro ao obter grupos:', error.message);
+        console.error(error.stack);
     }
 
-    // Encerrar a sessão após obter os IDs e nomes dos grupos
-    client.destroy();
+    client.destroy(); // Finalizar cliente após execução
+});
+
+client.on('auth_failure', msg => {
+    console.error('Falha de autenticação:', msg);
+});
+
+client.on('disconnected', reason => {
+    console.log('Cliente desconectado:', reason);
 });
 
 client.initialize();

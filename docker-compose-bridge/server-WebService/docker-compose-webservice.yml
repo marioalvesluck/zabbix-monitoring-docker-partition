@@ -5,30 +5,22 @@ services:
       dockerfile: Dockerfile.zabbix-web-service
     container_name: zabbix-web-service
     environment:
-      TZ: America/Sao_Paulo                # Configuração de fuso horário
-      ZBX_ALLOWEDIP: 192.168.0.0/24        # Rede permitida para comunicação
-      ZBX_TIMEOUT: 30                      # Timeout para relatórios
-      ZBX_STARTREPORTWRITERS: 2            # Número de escritores de relatório
+      TZ: America/Sao_Paulo
+      ZBX_ALLOWEDIP: 172.20.0.0/16,192.168.0.0/24  # Inclui a sub-rede do Docker e a rede local
+      ZBX_TIMEOUT: 30
+      ZBX_STARTREPORTWRITERS: 2
     ports:
-      - "${ZBX_FRONT_HOST:-127.0.0.1}:10053:10053"  # Porta vinculada ao IP específico (com valor padrão)
+      - "${ZBX_FRONT_HOST}:10053:10053"
     cap_add:
-      - SYS_ADMIN                          # Permissões adicionais para o contêiner
+      - SYS_ADMIN
     volumes:
-      - ./web_service.conf:/etc/zabbix/web_service.conf:ro  # Arquivo de configuração personalizado (somente leitura)
+      - ./web_service.conf:/etc/zabbix/web_service.conf:ro
     deploy:
       resources:
         limits:
-          memory: 512M                     # Limite máximo de memória
-          cpus: "1.0"                      # Limite máximo de CPU
+          memory: 512M
+          cpus: "1.0"
         reservations:
-          memory: 256M                     # Memória reservada para o serviço
-          cpus: "0.5"                      # CPU reservada para o serviço
-    restart: unless-stopped                # Reiniciar, exceto se manualmente parado
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-networks:
-  default:
-    driver: bridge
+          memory: 256M
+          cpus: "0.5"
+    restart: unless-stopped

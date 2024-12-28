@@ -4,69 +4,69 @@ services:
     container_name: zabbix-proxy-db
     restart: always
     environment:
-      MYSQL_DATABASE: zabbix_proxy               # Nome do banco de dados
-      MYSQL_USER: zabbix-proxy                   # Usuário do banco
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"        # Senha do banco (definida no .env)
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"  # Senha root (definida no .env)
+      MYSQL_DATABASE: zabbix_proxy
+      MYSQL_USER: zabbix-proxy
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     command:
       - mysqld
       - --default-authentication-plugin=mysql_native_password
       - --character-set-server=utf8
       - --collation-server=utf8_bin
     volumes:
-      - /data/zabbix/zabbix-proxy/mysql:/var/lib/mysql  # Persistência de dados do MySQL
-      - /etc/localtime:/etc/localtime:ro               # Sincronizar fuso horário
+      - /data/zabbix/zabbix-proxy/mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
     networks:
       zabbix-net:
-        ipv4_address: 172.18.0.20                      # IP fixo na rede Zabbix
+        ipv4_address: 172.18.0.20
 
   zabbix-proxy:
     build:
-      context: .                                        # Diretório atual
-      dockerfile: Dockerfile.zabbix-proxy-mysql         # Dockerfile customizado
+      context: .
+      dockerfile: Dockerfile.zabbix-proxy-mysql
     container_name: zabbix-proxy
     environment:
-      ZBX_PROXYMODE: 0                                 # Modo ativo (0) ou passivo (1)
-      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"            # IP ou hostname do servidor Zabbix
-      ZBX_SERVER_PORT: 10051                           # Porta do servidor Zabbix
-      ZBX_HOSTNAME: "${ZBX_PROXY_BALTIMORE_MYSQL_HOSTNAME}"  # Nome do proxy
-      ZBX_DEBUGLEVEL: 3                                # Nível de debug
-      ZBX_ENABLEREMOTECOMMANDS: 1                      # Permitir comandos remotos
-      ZBX_PROXYLOCALBUFFER: 2                          # Buffer local (horas)
-      ZBX_PROXYOFFLINEBUFFER: 12                       # Buffer offline (horas)
-      ZBX_PROXYHEARTBEATFREQUENCY: 10                  # Frequência de heartbeat (segundos)
-      ZBX_CONFIGFREQUENCY: 10                          # Frequência de configuração (segundos)
-      ZBX_DATASENDERFREQUENCY: 1                       # Frequência de envio de dados (segundos)
-      ZBX_STARTHISTORYPOLLERS: 10                      # Pollers de histórico
-      ZBX_STARTPOLLERS: 10                             # Pollers gerais
-      ZBX_STARTPREPROCESSORS: 10                       # Pré-processadores
-      ZBX_STARTPOLLERSUNREACHABLE: 20                  # Pollers de hosts inatingíveis
-      ZBX_STARTPINGERS: 10                             # Ping pollers
-      ZBX_STARTDISCOVERERS: 10                         # Descobridores
-      ZBX_STARTHTTPPOLLERS: 10                         # HTTP pollers
-      ZBX_STARTODBCPOLLERS: 5                          # ODBC pollers
-      ZBX_HOUSEKEEPINGFREQUENCY: 1                     # Frequência de limpeza (horas)
-      ZBX_STARTVMWARECOLLECTORS: 2                     # Coletores VMware
-      ZBX_CACHESIZE: 256M                              # Cache principal
-      ZBX_STARTDBSYNCERS: 6                            # Sincronizadores de banco
-      ZBX_HISTORYCACHESIZE: 256M                       # Cache de histórico
-      ZBX_HISTORYINDEXCACHESIZE: 256M                  # Cache de índice de histórico
-      ZBX_WEBDRIVERURL: "http://${ZBX_WEBDRIVE_HOST}:4444"  # URL do WebDriver
-      ZBX_STARTBROWSERPOLLERS: 10                      # Pollers de navegador
-      ZBX_STARTLLDWORKERS: 10                          # LLD workers
-      ZBX_TIMEOUT: 30                                  # Timeout geral
-      ZBX_UNREACHABLEPERIOD: 30                        # Período para hosts inatingíveis
-      ZBX_UNAVAILABLEDELAY: 30                         # Atraso para hosts indisponíveis
-      ZBX_UNREACHABLEDELAY: 30                         # Atraso para hosts inatingíveis
-      ZBX_LOGSLOWQUERIES: 3000                         # Log de queries lentas (ms)
-      ZBX_TLSCONNECT: psk                              # Conexão TLS (PSK)
-      ZBX_TLSACCEPT: psk                               # Aceitar conexões TLS (PSK)
-      ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}"  # Identidade PSK
-      ZBX_TLSPSKFILE: "/var/lib/zabbix/enc/${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}.psk"  # Arquivo PSK
-      DB_SERVER_HOST: 172.18.0.20                      # Host do banco de dados
-      MYSQL_DATABASE: zabbix_proxy                     # Nome do banco
-      MYSQL_USER: zabbix-proxy                         # Usuário do banco
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"              # Senha do banco (do .env)
+      ZBX_PROXYMODE: 0
+      ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "${ZBX_PROXY_BALTIMORE_MYSQL_HOSTNAME}"
+      ZBX_DEBUGLEVEL: 3
+      ZBX_ENABLEREMOTECOMMANDS: 1
+      ZBX_PROXYLOCALBUFFER: 2
+      ZBX_PROXYOFFLINEBUFFER: 12
+      ZBX_PROXYHEARTBEATFREQUENCY: 10
+      ZBX_CONFIGFREQUENCY: 10
+      ZBX_DATASENDERFREQUENCY: 1
+      ZBX_STARTHISTORYPOLLERS: 10
+      ZBX_STARTPOLLERS: 10
+      ZBX_STARTPREPROCESSORS: 10
+      ZBX_STARTPOLLERSUNREACHABLE: 20
+      ZBX_STARTPINGERS: 10
+      ZBX_STARTDISCOVERERS: 10
+      ZBX_STARTHTTPPOLLERS: 10
+      ZBX_STARTODBCPOLLERS: 5
+      ZBX_HOUSEKEEPINGFREQUENCY: 1
+      ZBX_STARTVMWARECOLLECTORS: 2
+      ZBX_CACHESIZE: 256M
+      ZBX_STARTDBSYNCERS: 6
+      ZBX_HISTORYCACHESIZE: 256M
+      ZBX_HISTORYINDEXCACHESIZE: 256M
+      ZBX_WEBDRIVERURL: "http://${ZBX_WEBDRIVE_HOST}:4444"
+      ZBX_STARTBROWSERPOLLERS: 10
+      ZBX_STARTLLDWORKERS: 10
+      ZBX_TIMEOUT: 30
+      ZBX_UNREACHABLEPERIOD: 30
+      ZBX_UNAVAILABLEDELAY: 30
+      ZBX_UNREACHABLEDELAY: 30
+      ZBX_LOGSLOWQUERIES: 3000
+      ZBX_TLSCONNECT: psk
+      ZBX_TLSACCEPT: psk
+      ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}"
+      ZBX_TLSPSKFILE: "/var/lib/zabbix/enc/${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}.psk"
+      DB_SERVER_HOST: 172.18.0.20
+      MYSQL_DATABASE: zabbix_proxy
+      MYSQL_USER: zabbix-proxy
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     volumes:
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
       - /var/lib/zabbix/zabbix-proxy/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
@@ -74,19 +74,51 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       zabbix-net:
-        ipv4_address: 172.18.0.21                      # IP fixo do proxy
+        ipv4_address: 172.18.0.21
     depends_on:
-      - zabbix-proxy-db                                # Inicia o banco antes do proxy
-    restart: always                                    # Reinicia em caso de falha
+      - zabbix-proxy-db
+    restart: always
     logging:
-      driver: json-file                                # Configuração de logs
+      driver: json-file
       options:
-        max-size: "10m"                                # Limite de tamanho por log
-        max-file: "3"                                  # Número máximo de arquivos de log
+        max-size: "10m"
+        max-file: "3"
+
+  zabbix-agent-db:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-db
+    environment:
+      ZBX_SERVER_HOST: 172.18.0.21  # Enviar dados para o zabbix-proxy
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-proxy-db-agent"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.22
+    depends_on:
+      - zabbix-proxy  # Garantir que o proxy esteja em execução
+    restart: always
+
+  zabbix-agent-proxy:
+    image: zabbix/zabbix-agent2:ubuntu-latest
+    container_name: zabbix-agent-proxy
+    environment:
+      ZBX_SERVER_HOST: 172.18.0.21  # Enviar dados para o zabbix-proxy
+      ZBX_SERVER_PORT: 10051
+      ZBX_HOSTNAME: "zabbix-proxy-agent"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.23
+    depends_on:
+      - zabbix-proxy  # Garantir que o proxy esteja em execução
+    restart: always
 
 networks:
   zabbix-net:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.18.0.0/16                        # Subnet da rede Zabbix
+        - subnet: 172.18.0.0/16

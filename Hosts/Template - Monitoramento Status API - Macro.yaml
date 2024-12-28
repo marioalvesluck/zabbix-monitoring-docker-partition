@@ -1,0 +1,31 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 018193e5c72b41b386bad31bf4e453f2
+      name: 'Monitoramento Web'
+  templates:
+    - uuid: 1495ee9a6d0e4e8ab5e027acc2996c8e
+      template: 'Template - Monitoramento Status API - Macro'
+      name: 'Template - Monitoramento Status API - Macro'
+      groups:
+        - name: 'Monitoramento Web'
+      items:
+        - uuid: a85504148721491ca181227fa4c15662
+          name: 'Status API'
+          type: HTTP_AGENT
+          key: 'status[Health OK]'
+          history: 90d
+          value_type: TEXT
+          url: '{$URL}'
+          triggers:
+            - uuid: e25d7c66eac047f0a5252123fbcd2127
+              expression: 'last(/Template - Monitoramento Status API - Macro/status[Health OK])<>"Health OK" and time()>={$TIME.INICIO} and time()<={$TIME.FINAL}'
+              name: 'BAD Status API'
+              url: '{$URL}'
+              status: DISABLED
+              priority: HIGH
+      macros:
+        - macro: '{$TIME.FINAL}'
+          value: '153000'
+        - macro: '{$TIME.INICIO}'
+          value: '050000'

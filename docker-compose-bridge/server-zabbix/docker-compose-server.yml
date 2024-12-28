@@ -11,34 +11,68 @@ services:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       ZBX_DEBUGLEVEL: 3
       ZBX_STARTPINGERS: 10
+      ZBX_STARTPOLLERS: 5
+      ZBX_STARTIPMIPOLLERS: 2
+      ZBX_STARTCONNECTORS: 2 
+      ZBX_STARTPOLLERSUNREACHABLE: 5
+      ZBX_STARTTRAPPERS: 5
+      ZBX_STARTDISCOVERERS: 10                         # Descobridores
+      ZBX_STARTHISTORYPOLLERS: 5
+      ZBX_STARTHTTPPOLLERS: 10                         # HTTP pollers
+      ZBX_STARTODBCPOLLERS: 5                          # ODBC pollers
+      ZBX_STARTTIMERS: 1
+      ZBX_STARTESCALATORS: 1
+      ZBX_JAVAGATEWAY: zabbix-java-gateway
+      ZBX_JAVAGATEWAYPORT: 10052
+      ZBX_STARTJAVAPOLLERS: 5
+      ZBX_STARTLLDPROCESSORS: 2
       ZBX_STARTPOLLERPROCESSES: 10
       ZBX_STARTDBSYNCERS: 8
-      ZBX_STARTREPORTWRITERS: 5
+      ZBX_STARTREPORTWRITERS: 3
       ZBX_CACHESIZE: 512M
       ZBX_HISTORYCACHESIZE: 512M
       ZBX_HISTORYINDEXCACHESIZE: 512M
       ZBX_TRENDCACHESIZE: 256M
+      ZBX_TRENDFUNCTIONCACHESIZE: 128M
       ZBX_VALUECACHESIZE: 256M
       ZBX_TIMEOUT: 30
       ZBX_UNREACHABLEPERIOD: 300
-      ZBX_UNAVAILABLEDELAY: 60
       ZBX_UNREACHABLEDELAY: 60
       ZBX_STARTBROWSERPOLLERS: 5
       ZBX_STARTLLDWORKERS: 5
+      ZBX_STARTVMWARECOLLECTORS: 0
+      ZBX_VMWAREFREQUENCY: 60
+      ZBX_VMWAREPERFFREQUENCY: 60
+      ZBX_VMWARECACHESIZE: 256M
+      ZBX_STARTPROXYPOLLERS: 1
+      ZBX_PROXYCONFIGFREQUENCY: 5
+      ZBX_HOUSEKEEPINGFREQUENCY: 1
+      ZBX_MAXHOUSEKEEPERDELETE: 5000
+      ZBX_PROBLEMHOUSEKEEPINGFREQUENCY: 60 # Available since 6.0.0
+      ZBX_CACHEUPDATEFREQUENCY: 10
+      ZBX_VMWARETIMEOUT: 30
       ZBX_HANODENAME: "${ZBX_HANODENAME}"
-      ZBX_NODEADDRESS: "${ZBX_SERVER_HOST}:10051"
       ZBX_WEBSERVICEURL: "http://${ZBX_FRONT_HOST}:10053/report"
-      ZBX_WEBDRIVERURL: "http://${ZBX_PROXY_HOST}:4444"
+      ZBX_WEBDRIVERURL: "http://${ZBX_WEBDRIVE_HOST}:4444"
       ZBX_TLSCONNECT: psk
       ZBX_TLSACCEPT: psk
       ZBX_TLSPSKIDENTITY: "${ZBX_SRV_PRIMARY_TLSPSKIDENTITY}"
       ZBX_TLSPSKFILE: /var/lib/zabbix/zabbix-server/enc/zabbix_server.psk
+      ZBX_ALERTSCRIPTPATH: "/usr/lib/zabbix/alertscripts"
+      ZBX_EXTERNALSCRIPTPATH: "/usr/lib/zabbix/externalscripts"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /var/lib/zabbix/mysql:/var/lib/mysql
       - /var/lib/zabbix/zabbix-server/enc:/var/lib/zabbix/zabbix-server/enc
-      - ./my.cnf:/etc/mysql/my.cnf
+      - /var/lib/zabbix/zabbix-server/usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - /var/lib/zabbix/zabbix-server/usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts
     ports:
       - "10051:10051"
-    network_mode: "host"  # Usando a rede local do host
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.5"
+        reservations:
+          memory: 1G
+          cpus: "1.0"
     restart: always
