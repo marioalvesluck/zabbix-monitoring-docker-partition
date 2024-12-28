@@ -1,3 +1,8 @@
+// Desenvoldo por: Bee Solutions //
+// Autor: Fernando Almondes //
+// Data: 07/07/2023 //
+// Inicie primeiro o index para salvar a sessao | Leia o qrcode gerado //
+
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
 const client = new Client({

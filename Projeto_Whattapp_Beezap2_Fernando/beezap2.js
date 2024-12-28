@@ -1,3 +1,7 @@
+// Desenvolvido por: Bee Solutions //
+// Autor: Fernando Almondes //
+// Data: 23/12/2024 //
+
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const express = require('express');
 const multer = require('multer');

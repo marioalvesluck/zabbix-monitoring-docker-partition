@@ -46,6 +46,9 @@ function show_help() {
     echo "  Dar permissão ao usuario zabbix: chown -R zabbix:zabbix /var/tmp/zabbix"
 }
 
+#Desenvolvido por: Bee Solutions
+# Autor: Fernando Almondes
+
 # Verificar os argumentos passados
 if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     show_help
@@ -161,7 +164,7 @@ echo "Dependências npm instaladas." | tee -a $LOG_FILE
 
 # Realizar sed no arquivo package.json
 echo "Atualizando whatsapp-web.js no package.json..."
-sed -i 's/"whatsapp-web.js": "^1.26.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
+#sed -i 's/"whatsapp-web.js": "^1.26.0"/"whatsapp-web.js": "github:pedroslopez\/whatsapp-web.js#webpack-exodus"/' package.json
 echo "whatsapp-web.js atualizado." | tee -a $LOG_FILE
 
 # Realizar update e instalação do whatsapp-web.js#webpack-exodus
