@@ -4,31 +4,35 @@ services:
       context: .
       dockerfile: Dockerfile.Grafana
       args:
-        TZ: $America/Sao_Paulo
+        TZ: ${PHP_TZ}                             # Fuso horário definido no .env
     container_name: grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin          # Usuário padrão do Grafana
-      - GF_SECURITY_ADMIN_PASSWORD=admin      # Senha padrão do Grafana
-      - TZ=America/Sao_Paulo                            # Fuso horário definido no .env
+      - GF_SECURITY_ADMIN_USER=admin         # Usuário padrão do Grafana
+      - GF_SECURITY_ADMIN_PASSWORD=admin     # Senha padrão do Grafana
+      - TZ=${PHP_TZ}                             # Fuso horário definido no .env
     ports:
-      - "3000:3000"                           # Porta do Grafana
+      - "3000:3000"                          # Porta do Grafana
     volumes:
-      - grafana_data:/var/lib/grafana         # Volume para persistência de dados
-      - grafana_logs:/var/log/grafana         # Volume para logs
+      - grafana_data:/var/lib/grafana        # Volume para persistência de dados
+      - grafana_logs:/var/log/grafana        # Volume para logs
     deploy:
       resources:
         limits:
-          memory: 1G                          # Memória máxima limitada a 1 GB
-          cpus: "0.5"                         # Limite de 50% de CPU
+          memory: 1G                         # Memória máxima limitada a 1 GB
+          cpus: "0.5"                        # Limite de 50% de CPU
         reservations:
-          memory: 512M                        # Memória dedicada de 512 MB
-          cpus: "0.3"                         # Reserva de 30% da CPU
+          memory: 512M                       # Memória dedicada de 512 MB
+          cpus: "0.3"                        # Reserva de 30% da CPU
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s                           # Intervalo entre verificações de saúde
-      timeout: 10s                            # Tempo máximo para resposta
-      retries: 3                              # Número de tentativas antes de marcar como unhealthy
-    restart: always                           # Reinício automático do contêiner em caso de falha
+      interval: 30s                          # Intervalo entre verificações de saúde
+      timeout: 10s                           # Tempo máximo para resposta
+      retries: 3                             # Número de tentativas antes de marcar como unhealthy
+    restart: always                          # Reinício automático do contêiner em caso de falha
+    depends_on:
+      # Se houver outros serviços, adicione aqui
+      # - zabbix-server
+      # - zabbix-proxy
 
 volumes:
   grafana_data:
