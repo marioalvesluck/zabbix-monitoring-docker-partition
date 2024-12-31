@@ -11,6 +11,9 @@ log "Iniciando configuração do Zabbix Proxy com MySQL."
 PROXY_NAME="proxy-mysql"
 DOCKER_COMPOSE_FILE="docker-compose-proxy-mysql.yml"
 
+ENV_FILE="../../configs/.env"
+
+
 # Caminho para o PSK do proxy
 PROXY_PATH="/var/lib/zabbix/zabbix-proxy-mysql/enc"
 PROXY_PSK_FILE="${PROXY_PATH}/${PROXY_NAME}.psk"
@@ -26,9 +29,14 @@ echo "$PROXY_PSK" > "$PROXY_PSK_FILE"
 log "Ajustando permissões do arquivo PSK..."
 chmod 775 "$PROXY_PSK_FILE"
 
-# Subindo os serviços
-log "Iniciando contêiner do Zabbix Proxy com MySQL..."
-docker compose -f "$DOCKER_COMPOSE_FILE" --env-file ../configs/.env up -d
+# Construindo a imagem do Docker
+log "Construindo imagem Docker do Zabbix Proxy..."
+docker compose --env-file "$ENV_FILE" -f "$DOCKER_COMPOSE_FILE" build
+
+# Iniciando o contêiner
+log "Iniciando contêiner do Zabbix Proxy..."
+docker compose --env-file "$ENV_FILE" -f "$DOCKER_COMPOSE_FILE" up -d
+
 
 log "Configuração do Zabbix Proxy com MySQL concluída."
 

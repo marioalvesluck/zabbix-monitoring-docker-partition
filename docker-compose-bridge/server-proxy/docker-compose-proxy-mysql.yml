@@ -19,6 +19,11 @@ services:
     networks:
       zabbix-net:
         ipv4_address: 172.18.0.20
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   zabbix-proxy:
     build:
@@ -29,13 +34,13 @@ services:
       ZBX_PROXYMODE: 0
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
       ZBX_SERVER_PORT: 10051
-      ZBX_HOSTNAME: "${ZBX_PROXY_BALTIMORE_MYSQL_HOSTNAME}"
+      ZBX_HOSTNAME: "${ZBX_PROXY_HOSTNAME}"
       ZBX_DEBUGLEVEL: 3
       ZBX_ENABLEREMOTECOMMANDS: 1
       ZBX_PROXYLOCALBUFFER: 2
       ZBX_PROXYOFFLINEBUFFER: 12
-      ZBX_PROXYHEARTBEATFREQUENCY: 10
-      ZBX_CONFIGFREQUENCY: 10
+      ZBX_PROXYHEARTBEATFREQUENCY: 5
+      ZBX_CONFIGFREQUENCY: 1
       ZBX_DATASENDERFREQUENCY: 1
       ZBX_STARTHISTORYPOLLERS: 10
       ZBX_STARTPOLLERS: 10
@@ -48,9 +53,10 @@ services:
       ZBX_HOUSEKEEPINGFREQUENCY: 1
       ZBX_STARTVMWARECOLLECTORS: 2
       ZBX_CACHESIZE: 256M
-      ZBX_STARTDBSYNCERS: 6
+      ZBX_STARTDBSYNCERS: 4
       ZBX_HISTORYCACHESIZE: 256M
       ZBX_HISTORYINDEXCACHESIZE: 256M
+      ZBX_WEBSERVICEURL: "http://${ZBX_FRONT_HOST}:10053/report"
       ZBX_WEBDRIVERURL: "http://${ZBX_WEBDRIVE_HOST}:4444"
       ZBX_STARTBROWSERPOLLERS: 10
       ZBX_STARTLLDWORKERS: 10
@@ -61,8 +67,8 @@ services:
       ZBX_LOGSLOWQUERIES: 3000
       ZBX_TLSCONNECT: psk
       ZBX_TLSACCEPT: psk
-      ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}"
-      ZBX_TLSPSKFILE: "/var/lib/zabbix/enc/${ZBX_PROXY_BALTIMORE_MYSQL_TLSPSKIDENTITY}.psk"
+      ZBX_TLSPSKIDENTITY: "${ZBX_PROXY_TLSPSKIDENTITY}"
+      ZBX_TLSPSKFILE: "/var/lib/zabbix/enc/${ZBX_PROXY_TLSPSKIDENTITY}.psk"
       DB_SERVER_HOST: 172.18.0.20
       MYSQL_DATABASE: zabbix_proxy
       MYSQL_USER: zabbix-proxy
@@ -77,18 +83,18 @@ services:
         ipv4_address: 172.18.0.21
     depends_on:
       - zabbix-proxy-db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10051"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: always
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   zabbix-agent-db:
     image: zabbix/zabbix-agent2:ubuntu-latest
     container_name: zabbix-agent-db
     environment:
-      ZBX_SERVER_HOST: 172.18.0.21  # Enviar dados para o zabbix-proxy
+      ZBX_SERVER_HOST: "zabbix-proxy"
       ZBX_SERVER_PORT: 10051
       ZBX_HOSTNAME: "zabbix-proxy-db-agent"
     volumes:
@@ -97,14 +103,19 @@ services:
       zabbix-net:
         ipv4_address: 172.18.0.22
     depends_on:
-      - zabbix-proxy  # Garantir que o proxy esteja em execução
+      - zabbix-proxy
+    healthcheck:
+      test: ["CMD", "zabbix_get", "-s", "zabbix-proxy", "-k", "agent.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: always
 
   zabbix-agent-proxy:
     image: zabbix/zabbix-agent2:ubuntu-latest
     container_name: zabbix-agent-proxy
     environment:
-      ZBX_SERVER_HOST: 172.18.0.21  # Enviar dados para o zabbix-proxy
+      ZBX_SERVER_HOST: "zabbix-proxy"
       ZBX_SERVER_PORT: 10051
       ZBX_HOSTNAME: "zabbix-proxy-agent"
     volumes:
@@ -113,7 +124,12 @@ services:
       zabbix-net:
         ipv4_address: 172.18.0.23
     depends_on:
-      - zabbix-proxy  # Garantir que o proxy esteja em execução
+      - zabbix-proxy
+    healthcheck:
+      test: ["CMD", "zabbix_get", "-s", "zabbix-proxy", "-k", "agent.ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: always
 
 networks:
