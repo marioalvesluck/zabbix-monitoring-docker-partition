@@ -10,7 +10,7 @@
 # Testado no Debian 11 e Ubuntu Server 20.04 ou 22.04
 # Crie o diretorio padrao: mkdir /var/tmp/zabbix
 # Deem permissao ao diretorio para o Zabbix: chown -R zabbix:zabbix /var/tmp/zabbix
-# Deem permissao de execucao ao script: chmod +x /usr/lib/zabbix/alertscripts/beebot.py
+# Deem permissao de execucao ao script: chmod +x /usr/lib/zabbix/alertscripts/beebotzap.py
 # Instale as dependencias: apt install python3-pip && pip install requests
 # Testando script beebot.py: python3 /usr/lib/zabbix/alertscripts/beebotzap.py "Bee Solutions Item ID: 12345" "Titulo da mensagem de Teste" "SEU-CHAT-ID-DO-WHATSAPP"
 # Lembre-se de importar o tipo de midia para o Zabbix, criar a Trigger Action e incluir o seu CHAT-ID do WhatsApp em Media no Profile do usuario do Zabbix
@@ -34,7 +34,7 @@ token = 'TOKEN-API-ZAP-CLIENTE'
 
 # URL base do Zabbix e API
 zabbix_url = 'http://127.0.0.1/zabbix'
-api_url = 'http://192.168.0.200:4000/api/download'
+api_url = 'http://192.168.0.10:4000/api/download'
 
 # Informacoes do cliente
 number = f'{chat_id}' # Chatid
@@ -43,7 +43,7 @@ destination = 'uploads/bee/' # Diretorio do cliente
 
 # Credenciais de login
 username = 'Admin'
-password = 'h0merb2rt1'
+password = 'zabbix'
 
 graph_directory = '/var/tmp/zabbix/'
 

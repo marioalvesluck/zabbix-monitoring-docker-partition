@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.0</version>
+    <date>2023-06-28T01:43:51Z</date>
+    <media_types>
+        <media_type>
+            <name>Telegram-Graph-BEE</name>
+            <type>SCRIPT</type>
+            <script_name>beebot.py</script_name>
+            <parameters>
+                <parameter>{ALERT.MESSAGE}</parameter>
+                <parameter>{ALERT.SUBJECT}</parameter>
+                <parameter>{ALERT.SENDTO}</parameter>
+            </parameters>
+            <message_templates>
+                <message_template>
+                    <event_source>TRIGGERS</event_source>
+                    <operation_mode>PROBLEM</operation_mode>
+                    <subject>Alerta de Novo Incidente ❌</subject>
+                    <message>Iniciado em: {EVENT.TIME}
+Problema: {EVENT.NAME}
+Host: {HOST.NAME}
+Item: {ITEM.NAME}
+Host IP: {HOST.CONN}
+Severidade: {EVENT.SEVERITY}
+Status Atual: {EVENT.OPDATA}
+By: Beesoft (Bee Solutions)
+Item ID: {ITEM.ID}
+Ação: Por favor, verificar dispositivo.❌
+</message>
+                </message_template>
+                <message_template>
+                    <event_source>TRIGGERS</event_source>
+                    <operation_mode>RECOVERY</operation_mode>
+                    <subject>Alerta de Resolução de Incidente ✅</subject>
+                    <message>Resolvido em: {EVENT.RECOVERY.TIME} de {EVENT.RECOVERY.DATE}
+Problema: {EVENT.NAME}
+Duração: {EVENT.DURATION}
+Host: {HOST.NAME}
+Host IP: {HOST.CONN}
+Severidade: {EVENT.SEVERITY}
+Status Atual: {EVENT.OPDATA}
+By: Beesoft (Bee Solutions)
+Item ID: {ITEM.ID}
+Ação: O Incidente foi resolvido ✅.</message>
+                </message_template>
+            </message_templates>
+        </media_type>
+    </media_types>
+</zabbix_export>
