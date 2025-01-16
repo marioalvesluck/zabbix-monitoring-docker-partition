@@ -22,9 +22,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./my.cnf:/etc/mysql/my.cnf
       - /var/log/mysql:/var/log/mysql
-    ports:
-      - "3306:3306"  # Mapeamento explícito
     restart: always
+    network_mode: host  # Define a rede como host
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -37,3 +36,4 @@ services:
           cpus: "2.0"
         reservations:
           memory: 2G
+          cpus: "1.5"

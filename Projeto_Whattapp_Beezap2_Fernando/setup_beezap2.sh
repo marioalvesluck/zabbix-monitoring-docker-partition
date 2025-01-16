@@ -24,7 +24,6 @@ case $OPTION in
     echo "Configurando API principal com PM2..."
     pm2 start /opt/beezap2/beezap2.js --name beezap2-api
     pm2 startup
-    pm2 stop 0
     pm2 save
     echo "API configurada com sucesso para iniciar com PM2."
     ;;
