@@ -46,7 +46,7 @@ log "Iniciando containers Docker..."
 docker-compose --env-file ../configs/.env -f docker-compose-web-server.yml up -d
 
 log "Iniciando containers Docker dos Agentes..."
-docker compose -f docker-compose-agent2.yml up -d
+#docker compose -f docker-compose-agent2.yml up -d
 
 log "Containers Docker iniciados com sucesso."
 

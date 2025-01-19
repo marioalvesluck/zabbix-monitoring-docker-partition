@@ -38,6 +38,10 @@ RUN echo "/var/log/zabbix_partition_maintenance.log { \
 # Definir permissões para os scripts de inicialização
 RUN chmod +x /docker-entrypoint-initdb.d/part.sql
 
+
+# Ajustar permissões do diretório /var/run/mysqld
+RUN chmod 700 /var/run/mysqld
+
 # Expor a porta padrão do MySQL
 EXPOSE 3306
 

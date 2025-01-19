@@ -1,0 +1,36 @@
+# Base na imagem oficial do Zabbix Web Service com Ubuntu
+FROM zabbix/zabbix-web-service:ubuntu-7.0-latest
+
+# Definir usuário root para instalar pacotes
+USER root
+
+# Configurar o fuso horário
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Instalar pacotes adicionais necessários
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nano \
+    vim \
+    htop \
+    python3 \
+    python3-pip \
+    wget \
+    gnupg \
+    apt-transport-https \
+    ca-certificates \
+    fonts-liberation && \
+    rm -rf /var/lib/apt/lists/*
+
+# Baixar e instalar o Google Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y ./google-chrome-stable_current_amd64.deb && \
+    rm -f google-chrome-stable_current_amd64.deb && \
+    apt-get clean
+
+# Voltar para o usuário Zabbix
+USER zabbix
+
+# Documentação sobre a imagem para referência futura
+LABEL maintainer="Mario Alves @CodeWarrior"
+LABEL description="Zabbix Web Service com configurações customizadas e ferramentas adicionais."

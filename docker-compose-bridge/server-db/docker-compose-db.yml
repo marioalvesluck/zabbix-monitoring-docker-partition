@@ -1,39 +1,59 @@
 services:
   zabbix-db:
-    container_name: zabbix-db
     build:
       context: .
       dockerfile: Dockerfile.zabbix-partition
+    container_name: zabbix-db
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQL_DATABASE: "${MYSQL_DATABASE}"
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"  # Senha do root
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"           # Nome do banco de dados
+      MYSQL_USER: "${MYSQL_USER}"                   # Usuário principal
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"           # Senha do usuário
       MYSQL_INITDB_ARGS: "--character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
-      TZ: "${PHP_TZ}"
+      TZ: "${PHP_TZ}"                               # Configuração de fuso horário
+
     command: [
-      "--character-set-server=utf8mb4",
-      "--collation-server=utf8mb4_bin"
+      "--character-set-server=utf8mb4",             # Charset padrão
+      "--collation-server=utf8mb4_bin",             # Collation padrão
+      "--innodb-buffer-pool-size=1G",               # Tamanho do pool de buffer InnoDB
+      "--innodb-redo-log-capacity=512M",            # Tamanho do redo log
+      "--thread_cache_size=64",                     # Cache de threads
+      "--max_connections=1000",                     # Máximo de conexões simultâneas
+      "--table_open_cache=2000",                    # Cache de tabelas abertas
+      "--open_files_limit=65535",                   # Limite de arquivos abertos
+      "--slow-query-log=1",                         # Ativar log de consultas lentas
+      "--slow-query-log-file=/var/log/mysql/slow.log", # Arquivo de log para consultas lentas
+      "--long_query_time=1",                        # Consultas com mais de 1s são consideradas lentas
+      "--binlog-expire-logs-seconds=604800",        # Tempo de expiração dos logs binários (7 dias)
+      "--log-bin=/var/lib/mysql/mysql-bin",         # Ativar logs binários
+      "--sql-mode=STRICT_TRANS_TABLES"              # Modo SQL para maior compatibilidade
     ]
+
     volumes:
-      - /var/lib/zabbix/mysql:/var/lib/mysql
-      - ./part.sql:/docker-entrypoint-initdb.d/part.sql
-      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql
-      - /etc/localtime:/etc/localtime:ro
-      - ./my.cnf:/etc/mysql/my.cnf
-      - /var/log/mysql:/var/log/mysql
-    restart: always
-    network_mode: host  # Define a rede como host
-    healthcheck:
+      - /var/lib/zabbix/mysql:/var/lib/mysql               # Volume para os dados do MySQL
+      - ./part.sql:/docker-entrypoint-initdb.d/part.sql    # Script de particionamento
+      - ./create_users.sql:/docker-entrypoint-initdb.d/create_users.sql # Script de criação de usuários
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql    # Script para configurações globais
+      - /etc/localtime:/etc/localtime:ro                  # Sincronização do fuso horário
+      - ./my.cnf:/etc/mysql/my.cnf                        # Arquivo de configuração do MySQL
+      - /var/log/mysql:/var/log/mysql                     # Diretório para logs do MySQL
+
+    ports:
+      - "3306:3306"                                       # Expor a porta padrão do MySQL
+
+    restart: always                                       # Reiniciar automaticamente o contêiner em caso de falha
+
+    healthcheck:                                          # Verificar a saúde do contêiner
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 3
-    deploy:
+
+    deploy:                                               # Configurações de recursos
       resources:
         limits:
           memory: 3G
-          cpus: "2.0"
+          cpus: "2.5"
         reservations:
-          memory: 2G
-          cpus: "1.5"
+          memory: 2.5G
+          cpus: "2.0"

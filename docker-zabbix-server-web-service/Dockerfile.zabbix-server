@@ -1,0 +1,29 @@
+# Dockerfile.zabbix-server
+FROM zabbix/zabbix-server-mysql:ubuntu-${ZBX_VERSION}-latest
+
+USER root
+
+# Configurar o fuso horário
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Instalar pacotes adicionais
+RUN apt-get update && apt-get install -y \
+    nano \
+    vim \
+    htop \
+    snmp-mibs-downloader \
+    unixodbc \
+    unixodbc-dev \
+    python3 \
+    python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instalar o pacote requests
+RUN pip3 install requests --break-system-packages
+
+# Criar a pasta e ajustar permissões
+RUN mkdir -p /var/tmp/zabbix && \
+    chown -R zabbix:zabbix /var/tmp/zabbix
+
+USER zabbix
