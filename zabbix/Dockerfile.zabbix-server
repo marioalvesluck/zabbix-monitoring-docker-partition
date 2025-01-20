@@ -1,5 +1,5 @@
 # Dockerfile.zabbix-server
-FROM zabbix/zabbix-server-mysql:ubuntu-latest
+FROM zabbix/zabbix-server-mysql:ubuntu-$ZBX_VERSION-latest
 
 USER root
 

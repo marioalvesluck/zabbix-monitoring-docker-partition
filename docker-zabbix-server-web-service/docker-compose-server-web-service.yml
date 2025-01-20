@@ -133,7 +133,7 @@ services:
         max-file: "3"
 
   zabbix-agent-webservice:
-    image: zabbix/zabbix-agent2:ubuntu-${ZBX_VERSION}-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-web
     environment:
       ZBX_SERVER_HOST: "zabbix-server"

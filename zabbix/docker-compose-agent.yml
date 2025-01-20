@@ -1,7 +1,7 @@
 
 services:
   zabbix-agent-server:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-server
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
@@ -18,7 +18,7 @@ services:
     restart: always
 
   zabbix-agent-db:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-db
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
@@ -35,7 +35,7 @@ services:
     restart: always
 
   zabbix-agent-web:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-web
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
@@ -52,7 +52,7 @@ services:
     restart: always
 
   zabbix-agent-proxy:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-proxy
     environment:
       ZBX_SERVER_HOST: "zabbix-server"

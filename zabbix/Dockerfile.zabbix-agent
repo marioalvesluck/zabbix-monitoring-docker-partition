@@ -1,5 +1,5 @@
 # Dockerfile.zabbix-agent
-FROM zabbix/zabbix-agent2:ubuntu-latest
+FROM zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
 
 USER root
 

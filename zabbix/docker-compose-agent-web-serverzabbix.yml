@@ -1,6 +1,6 @@
 services:
   zabbix-agent-server:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-server
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
@@ -17,7 +17,7 @@ services:
     restart: always
 
   zabbix-agent-web:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-web
     environment:
       ZBX_SERVER_HOST: "zabbix-server"

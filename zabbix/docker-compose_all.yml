@@ -117,7 +117,7 @@ services:
     restart: always
 
   zabbix-web:
-    image: zabbix/zabbix-web-apache-mysql:ubuntu-latest
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-web
     environment:
       DB_SERVER_HOST: "zabbix-db"

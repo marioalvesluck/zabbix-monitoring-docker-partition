@@ -1,5 +1,5 @@
 # Base na imagem oficial do Zabbix Web Service com Ubuntu
-FROM zabbix/zabbix-web-service:ubuntu-7.0-latest
+FROM zabbix/zabbix-web-service:ubuntu-$ZBX_VERSION-latest
 
 # Definir usuário root para instalar pacotes
 USER root

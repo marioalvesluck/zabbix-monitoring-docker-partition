@@ -92,7 +92,7 @@ services:
         max-file: "3"
 
   zabbix-web:
-    image: zabbix/zabbix-web-apache-mysql:ubuntu-latest
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-web
     environment:
       DB_SERVER_HOST: "${DB_SERVER_HOST_IP}"
@@ -131,7 +131,7 @@ services:
         max-file: "3"
 
   zabbix-agent-server:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-server
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
@@ -154,7 +154,7 @@ services:
         max-file: "3"
 
   zabbix-agent-web:
-    image: zabbix/zabbix-agent2:ubuntu-latest
+    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
     container_name: zabbix-agent-web
     environment:
       ZBX_SERVER_HOST: "zabbix-server"
