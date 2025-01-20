@@ -13,7 +13,6 @@ DOCKER_COMPOSE_FILE="docker-compose-proxy-mysql.yml"
 
 ENV_FILE="../../configs/.env"
 
-
 # Caminho para o PSK do proxy
 PROXY_PATH="/var/lib/zabbix/zabbix-proxy-mysql/enc"
 PROXY_PSK_FILE="${PROXY_PATH}/${PROXY_NAME}.psk"
