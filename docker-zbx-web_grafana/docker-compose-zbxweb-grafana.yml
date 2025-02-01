@@ -9,16 +9,13 @@ services:
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
       PHP_TZ: "${PHP_TZ}"
       TZ: "${PHP_TZ}"
-    depends_on:
-      - zabbix-server
     ports:
       - "8080:8080"
     networks:
       zabbix-net:
-        ipv4_address: 172.18.0.9
+        ipv4_address: 172.18.0.11
     volumes:
       - /etc/localtime:/etc/localtime:ro
-
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/zabbix"]
@@ -32,7 +29,7 @@ services:
         max-file: "3"
 
   zabbix-agent-web:
-    image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
+    image: zabbix/zabbix-agent2:ubuntu-7.0-latest
     container_name: zabbix-agent-web
     environment:
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
@@ -41,7 +38,7 @@ services:
       TZ: "${PHP_TZ}"
     networks:
       zabbix-net:
-        ipv4_address: 172.18.0.11
+        ipv4_address: 172.18.0.12
     deploy:
       resources:
         limits:
@@ -67,6 +64,9 @@ services:
       - TZ=${PHP_TZ}
     ports:
       - "3000:3000"
+    networks:
+      zabbix-net:
+        ipv4_address: 172.18.0.13
     volumes:
       - grafana_data:/var/lib/grafana
       - grafana_logs:/var/log/grafana
@@ -84,8 +84,6 @@ services:
       timeout: 10s
       retries: 3
     restart: always
-    depends_on:
-      - zabbix-server
 
   zabbix-agent-grafana:
     image: zabbix/zabbix-agent2:ubuntu-$ZBX_VERSION-latest
@@ -97,7 +95,7 @@ services:
       TZ: "${PHP_TZ}"
     networks:
       zabbix-net:
-        ipv4_address: 172.18.0.12
+        ipv4_address: 172.18.0.14
     deploy:
       resources:
         limits:

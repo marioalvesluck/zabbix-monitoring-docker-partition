@@ -9,22 +9,23 @@ LABEL description="Imagem customizada do Grafana com plugins adicionais e config
 ARG TZ=America/Sao_Paulo
 ENV TZ=${TZ}
 
-# Instale os plugins do Grafana
-ENV GRAFANA_PLUGINS="\
-    marcusolsson-dynamictext-panel \
-    alexanderzobnin-zabbix-app \
-    marcusolsson-calendar-panel \
-    marcusolsson-static-datasource \
-    volkovlabs-echarts-panel \
-    gapit-htmlgraphics-panel \
-    grafana-clock-panel"
+# Alterne para o usuário root para instalar pacotes
+USER root
 
-RUN apt-get update && apt-get install -y \
-    tzdata \
+# Instale os plugins do Grafana e configure o fuso horário
+RUN apk add --no-cache tzdata \
     && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
-    && dpkg-reconfigure -f noninteractive tzdata \
-    && grafana-cli plugins install ${GRAFANA_PLUGINS} \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && echo "${TZ}" > /etc/timezone \
+    && grafana cli plugins install marcusolsson-dynamictext-panel \
+    && grafana cli plugins install alexanderzobnin-zabbix-app \
+    && grafana cli plugins install marcusolsson-calendar-panel \
+    && grafana cli plugins install marcusolsson-static-datasource \
+    && grafana cli plugins install volkovlabs-echarts-panel \
+    && grafana cli plugins install gapit-htmlgraphics-panel \
+    && grafana cli plugins install grafana-clock-panel
+
+# Volte para o usuário grafana
+USER grafana
 
 # Adicione a configuração customizada do Grafana
 COPY grafana.ini /etc/grafana/grafana.ini
@@ -34,9 +35,6 @@ VOLUME ["/var/lib/grafana", "/var/log/grafana"]
 
 # Exponha a porta padrão do Grafana
 EXPOSE 3000
-
-# Defina o usuário como 'grafana' para maior segurança
-USER grafana
 
 # Comando de inicialização padrão
 CMD ["grafana-server", "--homepath=/usr/share/grafana", "--config=/etc/grafana/grafana.ini"]
