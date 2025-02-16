@@ -34,9 +34,8 @@ RUN mkdir -p /opt/beezap2/uploads/bee
 
 # Copiando apenas os arquivos necessários
 COPY index.js /opt/beezap2/index.js
-COPY beeid2.js /opt/beezap2/beeid2.js
 COPY beezap2.js /opt/beezap2/beezap2.js
-
+COPY beeid3.js /opt/beezap2/beeid3.js
 COPY ./setup_beezap2.sh /opt/beezap2/setup_beezap2.sh
 
 # Tornando o script executável
@@ -50,7 +49,8 @@ RUN . $NVM_DIR/nvm.sh && \
 # Registrando os scripts no PM2
 RUN . $NVM_DIR/nvm.sh && \
     pm2 start beezap2.js --name beezap2-api && \
-    pm2 save
+    pm2 save && \
+    pm2 stop 0
 
 # Expondo a porta da API
 EXPOSE 4000

@@ -1,5 +1,5 @@
 # Dockerfile.zabbix-server
-FROM zabbix/zabbix-server-mysql:ubuntu-$ZBX_VERSION-latest
+FROM zabbix/zabbix-server-mysql:ubuntu-7.2-latest
 
 USER root
 
@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     unixodbc \
     unixodbc-dev \
     python3 \
+    fping \
     python3-pip && \
     rm -rf /var/lib/apt/lists/*
 

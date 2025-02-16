@@ -18,7 +18,7 @@ case $OPTION in
     ;;
   2)
     echo "Mostrando grupos e IDs do WhatsApp..."
-    node /opt/beezap2/beeid2.js
+    node /opt/beezap2/beeid3.js
     ;;
   3)
     echo "Configurando API principal com PM2..."

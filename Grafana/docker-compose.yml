@@ -29,10 +29,6 @@ services:
       timeout: 10s                           # Tempo máximo para resposta
       retries: 3                             # Número de tentativas antes de marcar como unhealthy
     restart: always                          # Reinício automático do contêiner em caso de falha
-    depends_on:
-      # Se houver outros serviços, adicione aqui
-      # - zabbix-server
-      # - zabbix-proxy
 
 volumes:
   grafana_data:
