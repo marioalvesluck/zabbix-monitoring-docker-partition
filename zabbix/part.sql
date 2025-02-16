@@ -162,7 +162,6 @@ BEGIN
     CALL partition_maintenance(SCHEMA_NAME, 'trends', 365, 720, 12);     -- 12 partições mensais, mantendo dados por 365 dias
     CALL partition_maintenance(SCHEMA_NAME, 'trends_uint', 365, 720, 12); -- 12 partições mensais, mantendo dados por 365 dias
 END$$
-DELIMITER ;
 
 -- 🔹 EVENTOS AUTOMÁTICOS PARA GERENCIAMENTO DE PARTIÇÕES 🔹
 
