@@ -1,7 +1,7 @@
 DELIMITER $$
 
 -- Procedimento para criar partição
-CREATE PROCEDURE partition_create(
+CREATE PROCEDURE `partition_create`(
     IN SCHEMANAME VARCHAR(64),
     IN TABLENAME VARCHAR(64),
     IN PARTITIONNAME VARCHAR(64),
@@ -34,7 +34,7 @@ BEGIN
 END$$
 
 -- Procedimento para remover partições antigas
-CREATE PROCEDURE partition_drop(
+CREATE PROCEDURE `partition_drop`(
     IN SCHEMANAME VARCHAR(64),
     IN TABLENAME VARCHAR(64),
     IN DELETE_BELOW_PARTITION_DATE BIGINT
@@ -70,14 +70,14 @@ BEGIN
         EXECUTE STMT;
         DEALLOCATE PREPARE STMT;
 
-        SELECT CONCAT(SCHEMANAME, ".", TABLENAME) AS table, @drop_partitions AS partitions_deleted;
+        SELECT CONCAT(SCHEMANAME, ".", TABLENAME) AS `table`, @drop_partitions AS `partitions_deleted`;
     ELSE
-        SELECT CONCAT(SCHEMANAME, ".", TABLENAME) AS table, "N/A" AS partitions_deleted;
+        SELECT CONCAT(SCHEMANAME, ".", TABLENAME) AS `table`, "N/A" AS `partitions_deleted`;
     END IF;
 END$$
 
 -- Procedimento para verificar e criar partição inicial
-CREATE PROCEDURE partition_verify(
+CREATE PROCEDURE `partition_verify`(
     IN SCHEMANAME VARCHAR(64),
     IN TABLENAME VARCHAR(64),
     IN HOURLYINTERVAL INT
@@ -97,7 +97,7 @@ BEGIN
 
         SET @__PARTITION_SQL = CONCAT(
             "ALTER TABLE ", SCHEMANAME, ".", TABLENAME,
-            " PARTITION BY RANGE(clock) (PARTITION ",
+            " PARTITION BY RANGE(`clock`) (PARTITION ",
             PARTITION_NAME, " VALUES LESS THAN (", UNIX_TIMESTAMP(FUTURE_TIMESTAMP), "));"
         );
 
@@ -108,7 +108,7 @@ BEGIN
 END$$
 
 -- Procedimento para manutenção de partições (criação e exclusão)
-CREATE PROCEDURE partition_maintenance(
+CREATE PROCEDURE `partition_maintenance`(
     IN SCHEMA_NAME VARCHAR(32),
     IN TABLE_NAME VARCHAR(32),
     IN KEEP_DATA_DAYS INT,
@@ -147,7 +147,7 @@ BEGIN
 END$$
 
 -- Procedimento para manutenção de partições para múltiplas tabelas
-CREATE PROCEDURE partition_maintenance_all(
+CREATE PROCEDURE `partition_maintenance_all`(
     IN SCHEMA_NAME VARCHAR(32)
 )
 BEGIN
@@ -162,27 +162,5 @@ BEGIN
     CALL partition_maintenance(SCHEMA_NAME, 'trends', 365, 720, 12);     -- 12 partições mensais, mantendo dados por 365 dias
     CALL partition_maintenance(SCHEMA_NAME, 'trends_uint', 365, 720, 12); -- 12 partições mensais, mantendo dados por 365 dias
 END$$
-DELIMITER ;
-
--- 🔹 EVENTOS AUTOMÁTICOS PARA GERENCIAMENTO DE PARTIÇÕES 🔹
-
--- Ativar o Event Scheduler globalmente (para garantir que eventos sejam executados)
-SET GLOBAL event_scheduler = ON $$
-
--- Evento para remover partições antigas a cada 6 horas
-CREATE EVENT IF NOT EXISTS drop_partitions 
-ON SCHEDULE EVERY 6 HOUR 
-DO 
-BEGIN 
-    CALL partition_maintenance_all('zabbix'); 
-END $$ 
-
--- Evento para criar as próximas partições a cada 6 horas
-CREATE EVENT IF NOT EXISTS create_next_partitions 
-ON SCHEDULE EVERY 6 HOUR 
-DO 
-BEGIN 
-    CALL partition_maintenance_all('zabbix'); 
-END $$
 
 DELIMITER ;

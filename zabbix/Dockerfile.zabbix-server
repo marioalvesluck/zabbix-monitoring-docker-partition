@@ -1,5 +1,6 @@
 # Dockerfile.zabbix-server
-FROM zabbix/zabbix-server-mysql:ubuntu-7.2-latest
+ARG ZABBIX_VERSION=7.2-latest
+FROM zabbix/zabbix-server-mysql:${ZABBIX_VERSION}
 
 USER root
 
