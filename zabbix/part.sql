@@ -163,24 +163,4 @@ BEGIN
     CALL partition_maintenance(SCHEMA_NAME, 'trends_uint', 365, 720, 12); -- 12 partições mensais, mantendo dados por 365 dias
 END$$
 
--- 🔹 EVENTOS AUTOMÁTICOS PARA GERENCIAMENTO DE PARTIÇÕES 🔹
-
-SET GLOBAL event_scheduler = ON $$
-
--- Evento para remover partições antigas a cada 6 horas
-CREATE EVENT IF NOT EXISTS drop_partitions 
-ON SCHEDULE EVERY 6 HOUR 
-DO 
-BEGIN 
-    CALL partition_maintenance_all('zabbix'); 
-END $$ 
-
--- Evento para criar as próximas partições a cada 6 horas
-CREATE EVENT IF NOT EXISTS create_next_partitions 
-ON SCHEDULE EVERY 6 HOUR 
-DO 
-BEGIN 
-    CALL partition_maintenance_all('zabbix'); 
-END $$
-
 DELIMITER ;
