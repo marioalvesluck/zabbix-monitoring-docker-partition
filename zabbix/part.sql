@@ -152,7 +152,7 @@ CREATE PROCEDURE `partition_maintenance_all`(
 )
 BEGIN
     -- Retenção de dados personalizada para tabelas de histórico e tendências
-    CALL partition_maintenance(SCHEMA_NAME, 'history', 14, 24, 14);      --24 partições diárias, mantendo dados por 14 dias
+    CALL partition_maintenance(SCHEMA_NAME, 'history', 14, 24, 14);      -- 60 partições diárias, mantendo dados por 60 dias
     CALL partition_maintenance(SCHEMA_NAME, 'history_log', 14, 24, 14);
     CALL partition_maintenance(SCHEMA_NAME, 'history_str', 14, 24, 14);
     CALL partition_maintenance(SCHEMA_NAME, 'history_text', 14, 24, 14);
