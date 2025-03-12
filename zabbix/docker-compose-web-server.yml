@@ -6,9 +6,10 @@ services:
     container_name: zabbix-server
     environment:
       DB_SERVER_HOST: "${DB_SERVER_HOST_IP}"
+      DB_SERVER_PORT: 3306
       MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_DATABASE: zabbix
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       ZBX_DEBUGLEVEL: 3
       ZBX_STARTPINGERS: 10
       ZBX_STARTPOLLERS: 5
@@ -97,6 +98,7 @@ services:
     environment:
       DB_SERVER_HOST: "${DB_SERVER_HOST_IP}"
       MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
       PHP_TZ: "${PHP_TZ}"

@@ -5,6 +5,7 @@ services:
     environment:
       DB_SERVER_HOST: "${DB_SERVER_HOST_IP}"
       MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       ZBX_SERVER_HOST: "${ZBX_SERVER_HOST}"
       PHP_TZ: "${PHP_TZ}"
